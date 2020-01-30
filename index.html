@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Karbo Docs & Guides</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Documentation and guides for Karbo cryptocurrency.">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  
+  <link rel="alternate" href="/" hreflang="x-default" />
+  <link rel="alternate" href="/ua/" hreflang="uk_UA" />
+  <link rel="alternate" href="/ru/" hreflang="ru_RU" />
+  <link rel="alternate" href="/pl/" hreflang="pl_PL" />
+  <link rel="alternate" href="/es/" hreflang="es_ES" />
+  <link rel="alternate" href="/cn/" hreflang="zh_CN" />
+  <link rel="alternate" href="/jp/" hreflang="ja_JP" />
+  <link rel="alternate" href="/kr/" hreflang="ko_KR" />
+  
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <link rel="icon" type="image/icon" href="images/favicon.ico" >
+
+  <!-- Karbo CSS -->
+  <link rel="stylesheet" href="css/buble.css">
+  <link href="css/karbo.css" rel="stylesheet">
+
+  
+ <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,200i,300,300i,400,400i,700,700i,900,900i&amp;subset=cyrillic,latin-ext" rel="stylesheet">
+
+ <style>
+
+	.body {
+		font-family: 'Fira Sans', Arial, Helvetica, "Microsoft YaHei New", "Microsoft Yahei", "微软雅黑", 宋体, SimSun, STXihei, "华文细黑", sans-serif;
+		background: #FFF;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		color: #15315e;
+	}
+
+	.sidebar {
+		background-color: #127CC6;
+		background-image: linear-gradient(165deg,#0E073F 0%, #0057B8 43%, #0AADFD 100%);
+		background-size: cover;
+		background-attachment: fixed;
+		background-repeat: no-repeat;
+		color: #fff;
+	}
+	
+	.sidebar a,
+	.sidebar h2{
+		color: #fff;
+	}
+	
+	.sidebar a:hover {
+		color: #14B0FD;
+	}
+	
+	.search .search-keyword {
+		color: #14B0FD;
+	}
+	
+	.search .results-panel a:hover {
+		color: #fff;
+	}
+	
+	.sidebar-toggle {
+		width: auto;
+	}
+	
+	.search {
+		position: absolute;
+		width: 100%;
+		top: 100px;
+		border-top: 1px solid #127CC6;
+		border-bottom: 1px solid #127CC6;
+		z-index: 10;
+		background-color: #0057B8;
+		color: #fff;
+	}
+	
+	.search input {
+		background-color: #0057B8;
+		color: #fff;
+	}
+
+	.sidebar {
+		overflow: hidden;
+	}
+
+	.sidebar > h1 {
+		position: absolute;
+		top: 20px;
+		left: 0;
+		width: 100%;
+		color: #FFED00;
+	}
+	
+	.sidebar > h1::before {
+		display: inline-block;
+		width:50px;
+		height:50px;
+		vertical-align: middle;
+		margin: -5px 10px 0 0;
+		content:url('images/logo.svg');
+	}
+	
+	.sidebar li.active {
+		background-color: transparent;
+	}
+	
+	.sidebar li.active a {
+		color: #14B0FD;
+	}
+
+	.sidebar-nav {
+		position: absolute;
+		width: 100%;
+		top: 160px;
+		/* Make only the nav scrollable */
+		overflow-y: auto;
+		height: calc(100% - 240px);
+		box-sizing: content-box;
+		padding-right: 17px;
+	}
+
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#/">Home</a>
+	<a href="//karbo.org">Karbo</a>
+	<a href="//karbo.org/download">Download</a>
+  </nav>
+  
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+	  name: (
+         'Karbo Docs'
+       ),
+	  
+      repo: '',
+	  search: 'auto',
+	  loadSidebar: false
+    }
+  </script>
+  <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
+  <script src="//unpkg.com/docsify@4.7.1/lib/plugins/search.min.js"></script>
+</body>
+</html>
