@@ -365,7 +365,6 @@ Argument | Description | Format
 number | the number of output in transaction | int
 transactionHash | the hash of the transaction containing this output for this input | string
 
-
 Outputs attributes:
 
 Argument | Description | Format
@@ -387,7 +386,6 @@ Argument | Description | Format
 data | containing `key` string attribute to which output is sent | json object
 type | the type of the output target | int
 
-
 Signatures attributes:
 
 each signature element has
@@ -397,6 +395,31 @@ Argument | Description | Format
 first | the number of signature which repeats as many times as transacion mixin count (signature for each input in mixin) | int
 second | the signature | string
 
+
+### gettransactionspool
+
+`gettransactionspool()` method the list of short details of transactions present in mempool.
+
+No Input
+
+**Output**
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transactions | array of transactions in mempool* | array
+
+\* empty array means that currently there are no transactions in mempool
+
+Transactions entry attributes:
+
+Argument | Description | Format
+------- | ---------- | --------
+hash | the hash of transaction | string
+fee | the network fee of transaction | int
+amount_out | total amount in transaction | int
+size | the size of transaction | int
+receive_time | the timestamp when transaction was received by queried node | int
 
 
 ### getcurrencyid
@@ -1020,7 +1043,7 @@ Output:
                "first":0,
                "second":"54006f8cbf961549c5cd8e4bb25293493efa6b20d843bd40afc921a0fcd1e40af2a58109b73f8dab78641894bd7a94266ed48b4a8d6355b2c766882617b97d0a"
             },
-            
+
             ...
 
             {
@@ -1036,6 +1059,64 @@ Output:
          "unlockTime":0,
          "version":1
       }
+   }
+}
+```
+
+
+
+
+### gettransactionspool
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "gettransactionspool",
+  "params": {
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "status":"OK",
+      "transactions":[
+
+      ]
+   }
+}
+```
+or 
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "status":"OK",
+      "transactions":[
+         {
+            "amount_out":5880000115000,
+            "fee":100000000000,
+            "hash":"72b2cdc9d4d3a9def30c7002700a4983120ffb197003f44fce3f43bd2d36d96d",
+            "receive_time":1589484795,
+            "size":2240
+         },
+         
+         ...
+
+         {
+            "amount_out":6512511619736,
+            "fee":100000000000,
+            "hash":"c3d0f89dec284d2a6479c52544609949f42606315adcfacbb69b79dd6d0fae17",
+            "receive_time":1589484796,
+            "size":10145
+         }
+      ]
    }
 }
 ```
