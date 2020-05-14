@@ -278,6 +278,125 @@ blocks | vector of block details where each block has the same output format as 
 status | status of the request | string
 
 
+### gettransaction
+
+`gettransaction()` method returns information on a single transaction by its hash.
+
+**Input**
+
+Argument        | Mandatory     | Description             | Format
+--------------- | ------------- | ----------------------- | ------
+hash            | Yes           | hash of the transaction | string
+
+**Output**
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transaction | details of the transaction | json object
+
+Transaction attributes:
+
+Argument | Description | Format
+------- | ---------- | --------
+blockHash | hash of block containing this transaction | string
+blockIndex | index of block containing this transaction | int
+extra | transaction extra which can be any information | json object
+fee | total fees of the transaction | int
+hash | hash of the transaction | string
+inBlockchain | wherer thransaction is included in block | boolean
+inputs | inputs of the transaction | json object
+mixin | mixin of the transaction | int
+outputs | outputs of the transaction | json object
+paymentId | payment Id of the transaction | string
+signatures | array of transaction signatures | array
+signaturesSize | the size of the signatures array | int
+size | total size of the transaction | int
+timestamp | timestamp of the block that includes transaction | int
+totalInputsAmount | total amount on input side of the transaction | int
+totalOutputsAmount | total amount present in the transaction | int
+unlockTime | delay in unlocking the amount | int
+
+Extra attributes: 
+
+Argument | Description | Format
+------- | ---------- | --------
+nonce |  | array
+publicKey | the public key of the transaction | string
+raw | raw transaction extra in hex | string
+size | the size of transaction extra | int
+
+Inputs attributes:
+
+The array of inputs, each having these attributes:
+
+Argument | Description | Format
+------- | ---------- | --------
+data | the input data | json object
+type | the type of input, can be `02` for normal transaction, `ff` for coinbase transaction | hex
+
+In the case of coinbase transaction there is only one input with such attributes of `data`:
+
+Argument | Description | Format
+------- | ---------- | --------
+amount | the amount of input | int
+input | the input with `height` attribute denotig the block height | int
+
+Normal transaction input `data` attributes:
+
+Argument | Description | Format
+------- | ---------- | --------
+input | the input | json object
+mixin | mixin | int
+outputs | correspoding ouptuts in transactions, the size of the array is equal to mixin size | array
+
+`input` attributes:
+
+Argument | Description | Format
+------- | ---------- | --------
+amount | the amount of the input, in atomic units | int
+k_image | the key image for the given input | string
+key_offsets | a list of integer offets to the input, these are the set of outputs used as "fake" outputs, as well as real | array 
+
+`outputs` attributes:
+
+Argument | Description | Format
+------- | ---------- | --------
+number | the number of output in transaction | int
+transactionHash | the hash of the transaction containing this output for this input | string
+
+
+Outputs attributes:
+
+Argument | Description | Format
+------- | ---------- | --------
+globalIndex | global index for output | int
+output | the output information | json object
+
+`output` attributes:
+
+Argument | Description | Format
+------- | ---------- | --------
+amount | the amount, in au | 
+target | has `data` json object and `type` | json object 
+
+`target` attributes:
+
+Argument | Description | Format
+------- | ---------- | --------
+data | containing `key` string attribute to which output is sent | json object
+type | the type of the output target | int
+
+
+Signatures attributes:
+
+each signature element has
+
+Argument | Description | Format
+------- | ---------- | --------
+first | the number of signature which repeats as many times as transacion mixin count (signature for each input in mixin) | int
+second | the signature | string
+
 
 
 ### getcurrencyid
@@ -759,4 +878,164 @@ Output:
  		"currency_id_blob": "3125b79e4a42f8d4d2fc4dffea8442e185ebda940ecd4d3b449056a4ea0efea4"
  	}
  }
+```
+
+
+
+
+### gettransaction
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "gettransaction",
+  "params": {
+   "hash":"128170e2de0f96b7fe6f43f2fd64090ab0d63cc43a0f69a04b6e598cd2c70e15"
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "status":"OK",
+      "transaction":{
+         "blockHash":"000000000028e8b92df7010000f0eab92df7010000bd07f628fa7f000050e8b9",
+         "blockIndex":0,
+         "extra":{
+            "nonce":[
+
+            ],
+            "publicKey":"8bf1aecc80bf132fded9e1b4464042c04f4df223274e6d501cdbd419d55df9ae",
+            "raw":"018bf1aecc80bf132fded9e1b4464042c04f4df223274e6d501cdbd419d55df9ae",
+            "size":33
+         },
+         "fee":100000000000,
+         "hash":"491857c7eb6276e0d872c1926d0c9863b39f207ae09d67b70b8bd648e16e82ab",
+         "inBlockchain":false,
+         "inputs":[
+            {
+               "data":{
+                  "input":{
+                     "amount":200000000,
+                     "k_image":"982f9b4063268ed8bc2e637db4e5e1195896b696a577f2278b5c2391b98efaee",
+                     "key_offsets":[
+                        25980,
+                        10137,
+                        48877
+                     ]
+                  },
+                  "mixin":3,
+                  "outputs":[
+                     {
+                        "number":5,
+                        "transactionHash":"227fc58f1c1bdf89698c93a6280ce803cfe76606d6cfce7ef1eed5baf443b45c"
+                     },
+                     {
+                        "number":1,
+                        "transactionHash":"dbba432ed02c04540687ea05481ac782686e200efcc489241d08148d1c3fbd0b"
+                     },
+                     {
+                        "number":5,
+                        "transactionHash":"76d1c6a06c3049df25430ad2a50d42ec8947ac10b575487ba37f13ef26c17a12"
+                     }
+                  ]
+               },
+               "type":"02"
+            },
+
+            ...
+
+            {
+               "data":{
+                  "input":{
+                     "amount":3000000000000,
+                     "k_image":"17275942b763fc3166ca9b86e6dfcab32ed5a556cc5b995a9c2bbf8a66d7e8d7",
+                     "key_offsets":[
+                        60338,
+                        22276,
+                        125912
+                     ]
+                  },
+                  "mixin":3,
+                  "outputs":[
+                     {
+                        "number":10,
+                        "transactionHash":"b5c1b064dd0f8ee3ad60e5bb063276d8b49ea50c08487f290e5d525c9c77a4fb"
+                     },
+                     {
+                        "number":92,
+                        "transactionHash":"79993ad7abb2a03396129527571f2cd2cab468261e905992f6109d4dfbaebca7"
+                     },
+                     {
+                        "number":4,
+                        "transactionHash":"7ffdaefdc2f8d172633d4d22bfab044dcc2bfc44e9c60a4cd250e26af992bb0e"
+                     }
+                  ]
+               },
+               "type":"02"
+            }
+         ],
+         "mixin":3,
+         "outputs":[
+            {
+               "globalIndex":0,
+               "output":{
+                  "amount":9,
+                  "target":{
+                     "data":{
+                        "key":"0d0de439543ff886bbf5d16e1cf4beb9e2163b1a50fadeb461aacf401ccf6351"
+                     },
+                     "type":"02"
+                  }
+               }
+            },
+            
+            ...
+
+            {
+               "globalIndex":0,
+               "output":{
+                  "amount":1000000000000,
+                  "target":{
+                     "data":{
+                        "key":"df52982166519417263da2757d91d940bced321807d2e1e97df076cbfd790abf"
+                     },
+                     "type":"02"
+                  }
+               }
+            }
+         ],
+         "paymentId":"0000000000000000000000000000000000000000000000000000000000000000",
+         "signatures":[
+            {
+               "first":0,
+               "second":"fc770928b3d5ac3a41b68c18e73b64a78e1a46259d1f4139a6a32b408f53720db01a9e4df8443f999bee42263ce5e88f31ab5fababbd69d0db9576775baf970e"
+            },
+            {
+               "first":0,
+               "second":"54006f8cbf961549c5cd8e4bb25293493efa6b20d843bd40afc921a0fcd1e40af2a58109b73f8dab78641894bd7a94266ed48b4a8d6355b2c766882617b97d0a"
+            },
+            
+            ...
+
+            {
+               "first":24,
+               "second":"3e4d53ae5b46592435d237981e6ad4cb5307e5e9e0d7be546e31bd99d6780a02c18c2847ecb5e8fb3920ae2264c113942b19a3b630157b8dedd8032117c9680c"
+            }
+         ],
+         "signaturesSize":25,
+         "size":6577,
+         "timestamp":1589473389,
+         "totalInputsAmount":5609851418219,
+         "totalOutputsAmount":5509851418219,
+         "unlockTime":0,
+         "version":1
+      }
+   }
+}
 ```
