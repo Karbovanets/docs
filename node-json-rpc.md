@@ -278,6 +278,22 @@ blocks | vector of block details where each block has the same output format as 
 status | status of the request | string
 
 
+### getblocktimestamp
+
+`getblocktimestamp()` method returns the timestamp of a block.
+
+**Input**
+
+Argument        | Mandatory     | Description           | Format
+--------------- | ------------- | --------------------- | ------
+height          | Yes           | height of the block   | int
+
+Argument | Description | Format
+------- | ---------- | --------
+timestamp | timestamp of the block | int
+status | status of the request | string
+
+
 ### gettransaction
 
 `gettransaction()` method returns information on a single transaction by its hash.
@@ -422,6 +438,71 @@ size | the size of transaction | int
 receive_time | the timestamp when transaction was received by queried node | int
 
 
+### gettransactionsbypaymentid
+
+`gettransactionsbypaymentid()` methid returns an array of short data of trandactions containing given Payment ID.
+
+**Input**
+
+Argument        | Mandatory     | Description             | Format
+--------------- | ------------- | ----------------------- | ------
+payment_id      | Yes           | Payment ID              | string
+
+**Output**
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transactions | short details of the transactions, see below | array
+
+Short details of the transaction:
+
+Argument | Description | Format
+------- | ---------- | --------
+hash | the hash of transaction | string
+fee | the network fee of transaction | int
+amount_out | total amount in transaction | int
+size | the size of transaction | int
+
+
+### gettransactionhashesbypaymentid
+
+`gettransactionhashesbypaymentid()` method returns hashes of transactions containing given Payment ID.
+
+**Input**
+
+Argument        | Mandatory     | Description             | Format
+--------------- | ------------- | ----------------------- | ------
+paymentId       | Yes           | Payment ID              | string
+
+**Output**
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transactionHashes | hashes of transactions | array
+
+
+### gettransactionsbyhashes
+
+`gettransactionsbyhashes()` method returns details of the transactions found by given hashes.
+
+**Input**
+
+Argument          | Mandatory     | Description             | Format
+----------------- | ------------- | ----------------------- | ------
+transactionHashes | Yes           | hashes of the transactions to find | array
+
+**Output**
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transactions | details of the transactions | array
+
+For transaction details attributes: see [gettransaction](#gettransaction)
+
+
 ### getcurrencyid
 
 `getcurrencyid()` method returns unique currency identifier.
@@ -434,6 +515,134 @@ Argument | Description | Format
 -------- | ----------- | ------
 currency_id_blob | unique currency identifier | string
 
+
+### checktransactionkey
+
+`checktransactionkey()` method allows to check payment by `Private Transaction Key`.
+
+**Input**
+
+Argument          | Mandatory  | Description             | Format
+----------------- | ---------- | ----------------------- | ------
+transaction_id    | yes        | the hash of transaction | string
+transaction_key   | yes        | Private Transaction Key | string 
+address           | yes        | the destination public address | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+amount   | the amount received by destination address | int
+outputs  | outputs that belong to destination address | array
+status | status of the request | string
+
+
+### checktransactionproof
+
+`checktransactionproof()` allows to check payment by special Transaction Proof without revealing `Private Transaction Key` by sender.
+
+**Input**
+
+Argument            | Mandatory  | Description             | Format
+------------------- | ---------- | ----------------------- | ------
+transaction_id      | yes        | the hash of transaction | string
+signature           | yes        | The proof of the transaction | string 
+destination_address | yes        | the destination public address | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+signature_valid | whether signature is valid | boolean
+received_amount | the amount received by destination address | int
+outputs  | outputs that belong to destination address | array
+status | status of the request | string
+
+
+### checktransactionbyviewkey
+
+`checktransactionbyviewkey()` method allows to check payment by recipient's `View Secret Key`.
+
+**Input**
+
+Argument          | Mandatory   | Description             | Format
+----------------- | ----------- | ----------------------- | ------
+transaction_id    | yes         | the hash of transaction | string
+view_key          | yes         | recipient's `View Secret Key` | string
+address           | yes         | recipient's public address | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+amount | the amount received by destination address | int
+outputs  | outputs that belong to destination address | array
+confirmations | the number of network confirmations | int
+status | status of the request | string
+
+
+### checkreserveproof
+
+`checkreserveproof()` method allows to check the proof of reserve which proves that given address possess/possessed the said amount at given height. 
+
+**Input**
+
+Argument     | Mandatory   | Description             | Format
+------------ | ----------- | ----------------------- | ------
+address      | yes         | public address of wallet which reserve | string
+height       | no          | the height as of which to check the reserve | int
+message      | no          | the challenge message | string
+signature    | yes         | the signature proving the balance | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+good     | whether signature is valid | boolean
+total    | total amount proved | int
+spent    | spent amount | int
+locked   | locked amount | int
+
+
+### validateaddress
+
+`validateaddress()` methods allows to check if given public address is valid.
+
+**Input**
+
+Argument     | Mandatory   | Description             | Format
+------------ | ----------- | ----------------------- | ------
+address      | yes         | public address to validate | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+is_valid | whether given address is valid | boolean
+address  | address, encoded from decoded public keys | string
+spend_public_key | decoded spend public key of the address | string
+view_public_key | decoded view public key of the address | string
+status | status of the request | string
+
+
+### verifymessage
+
+`verifymessage()` method allows to verify message signed by wallet keys.
+
+**Input**
+
+Argument     | Mandatory   | Description             | Format
+------------ | ----------- | ----------------------- | ------
+message      | yes         | message to verify       | string
+address      | yes         | public address corresponding to keys, used to sign message | string
+signature    | yes         | signature of message by private keys | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+sig_valid | whether signature is valid | boolean
+status | status of the request | string
 
 
 ## Examples
@@ -879,8 +1088,30 @@ Output:
 }
 ```
 
+### getblocktimestamp
 
-
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "getblocktimestamp",
+  "params": {
+    "height":10000
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "status":"OK",
+      "timestamp":1467193202
+   }
+}
+```
 
 ### getcurrencyId
 
@@ -902,9 +1133,6 @@ Output:
  	}
  }
 ```
-
-
-
 
 ### gettransaction
 
@@ -1063,9 +1291,6 @@ Output:
 }
 ```
 
-
-
-
 ### gettransactionspool
 
 Input:
@@ -1117,6 +1342,703 @@ or
             "size":10145
          }
       ]
+   }
+}
+```
+
+### gettransactionsbypaymentid
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "gettransactionsbypaymentid",
+  "params": {
+    "payment_id":"c536d820595b51fdc742ce173c0e6373d1ba3a4eca85f0bac5790030c5d76c91"
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "status":"OK",
+      "transactions":[
+         {
+            "amount_out":6200000070000,
+            "fee":100000000000,
+            "hash":"6c8cd9e36eb8fe893532eff91347c74443938525c2ca72d8341e6883dd281d71",
+            "size":984
+         },
+         
+         ...
+         
+         {
+            "amount_out":20692005138090,
+            "fee":100000000000,
+            "hash":"d511349c81fb99c97273db687387801b63647f03b9a2acf1a000a1235256818a",
+            "size":4463
+         }
+      ]
+   }
+}
+```
+
+### gettransactionhashesbypaymentid
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "gettransactionhashesbypaymentid",
+  "params": {
+    "paymentId":"c536d820595b51fdc742ce173c0e6373d1ba3a4eca85f0bac5790030c5d76c91"
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "status":"OK",
+      "transactionHashes":[
+         "6c8cd9e36eb8fe893532eff91347c74443938525c2ca72d8341e6883dd281d71",
+         "a71285fcd8afc0d1de2271237294e795f2342b0080f6e79da6b58019427cdeb4",
+         "30fb0ce3b4a5a52083f862d3741a5b4a7e595eaaf21e4d0e5e6ca4cc826f0e5f",
+         
+         ...
+
+         "528126ab6e1a9203d776684b422b98e78c9a865af555efddb0ea9eb29a22d05b"
+      ]
+   }
+}
+```
+
+### gettransactionsbyhashes
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "gettransactionsbyhashes",
+  "params": {
+    "transactionHashes":[
+      "6c8cd9e36eb8fe893532eff91347c74443938525c2ca72d8341e6883dd281d71",
+      "a71285fcd8afc0d1de2271237294e795f2342b0080f6e79da6b58019427cdeb4"
+    ]
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "status":"OK",
+      "transactions":[
+         {
+            "blockHash":"63f96f2865e5df5d5894ca832446dee652bc791ab9773fdbee200eed38cdd6cc",
+            "blockIndex":469284,
+            "extra":{
+               "nonce":[
+                  0,
+                  197,
+                  
+                  ...
+
+                  108,
+                  145
+               ],
+               "publicKey":"cc9b75594145a37be8c43da995cfd32699ad0768b0e5923fc785e0f952f356f5",
+               "raw":"022100c536d820595b51fdc742ce173c0e6373d1ba3a4eca85f0bac5790030c5d76c9101cc9b75594145a37be8c43da995cfd32699ad0768b0e5923fc785e0f952f356f5",
+               "size":68
+            },
+            "fee":100000000000,
+            "hash":"6c8cd9e36eb8fe893532eff91347c74443938525c2ca72d8341e6883dd281d71",
+            "inBlockchain":true,
+            "inputs":[
+               {
+                  "data":{
+                     "input":{
+                        "amount":300000000000,
+                        "k_image":"670705859ea6ada74b698a46e635493783eb4c0cf61f04a10d7a3921147f74ec",
+                        "key_offsets":[
+                           73283,
+                           136011,
+                           62294
+                        ]
+                     },
+                     "mixin":3,
+                     "outputs":[
+                        {
+                           "number":10,
+                           "transactionHash":"0189418174da81938e69da225538eacb859f2ab7d2af4eb5538ed19a3d031e0e"
+                        },
+                        {
+                           "number":37,
+                           "transactionHash":"96ecd2389c47e0b808b24774e63710144a1d1b1853a1d09433c9404e0609d2e2"
+                        },
+                        {
+                           "number":10,
+                           "transactionHash":"88a9c50ea7c01914577bb1e9e5f970e1abe4fcb9fcc32923e31fb10f62524624"
+                        }
+                     ]
+                  },
+                  "type":"02"
+               },
+               {
+                  "data":{
+                     "input":{
+                        "amount":70000,
+                        "k_image":"0fde58f15f85702514dc73c11f76f4804995e48ff7a3e4132e3a9c26de71f894",
+                        "key_offsets":[
+                           25177,
+                           4837,
+                           16455
+                        ]
+                     },
+                     "mixin":3,
+                     "outputs":[
+                        {
+                           "number":3,
+                           "transactionHash":"7b6812f52141b949921611b1751d3fa970dd48a32c3f6df25d77838158e7fd6e"
+                        },
+                        {
+                           "number":2,
+                           "transactionHash":"62ad89ba56f7236346f072645482f9d3ac12c25162dd96a5c34dd71dd3fa046c"
+                        },
+                        {
+                           "number":3,
+                           "transactionHash":"e1d8bf45eab97166cfcdae45615e967cb2d7ef04a13921225edb135ebbde9332"
+                        }
+                     ]
+                  },
+                  "type":"02"
+               },
+               {
+                  "data":{
+                     "input":{
+                        "amount":6000000000000,
+                        "k_image":"c1bc732c470e87909449359dc6f1beb431c5bf4e87b6294f6b465a86a57323d6",
+                        "key_offsets":[
+                           100847,
+                           2958,
+                           21896
+                        ]
+                     },
+                     "mixin":3,
+                     "outputs":[
+                        {
+                           "number":13,
+                           "transactionHash":"4087f0fbaf3d6f388cfffb89024e846eb7bcd16a66a3fbb6c7dac9057f303219"
+                        },
+                        {
+                           "number":11,
+                           "transactionHash":"e4aa36188ef77f5b46a1f5caa6de20dd5b588b3e3f2cb777027aa3e7233f05e5"
+                        },
+                        {
+                           "number":12,
+                           "transactionHash":"4a43d417edbd78079bd133c5108e45557b915cff41a4d08e9b03fc1427278153"
+                        }
+                     ]
+                  },
+                  "type":"02"
+               }
+            ],
+            "mixin":3,
+            "outputs":[
+               {
+                  "globalIndex":46652,
+                  "output":{
+                     "amount":70000,
+                     "target":{
+                        "data":{
+                           "key":"af027f1a2951309a41a81b5a8bafe1f18b573f63b67b700f8b90d24fa12c3432"
+                        },
+                        "type":"02"
+                     }
+                  }
+               },
+               
+               ...
+
+               {
+                  "globalIndex":201436,
+                  "output":{
+                     "amount":3000000000000,
+                     "target":{
+                        "data":{
+                           "key":"6f7faf1dbf245c561c79eb6e1b5aabd4304e06d879c28c8fafb0ffa08a602e8f"
+                        },
+                        "type":"02"
+                     }
+                  }
+               }
+            ],
+            "paymentId":"c536d820595b51fdc742ce173c0e6373d1ba3a4eca85f0bac5790030c5d76c91",
+            "signatures":[
+               {
+                  "first":0,
+                  "second":"0856318f727192193f1b7471932ad238b21e323a6220a2bcbb156538b09a9e0b5f46e97e1080e7f00574ea32abb3a4e492540f3da90442cbd0e1617ed4f4ed03"
+               },
+               
+               ...
+
+               {
+                  "first":2,
+                  "second":"760ab2d47102578295e8ad01231ce20f43d206861dc85c66632fc48bcfe86e0196fd8f146c830da43fccf395564b70cc15fba2629c1af981e5cbd75fd4c2d709"
+               }
+            ],
+            "signaturesSize":3,
+            "size":984,
+            "timestamp":1585028829,
+            "totalInputsAmount":6300000070000,
+            "totalOutputsAmount":6200000070000,
+            "unlockTime":0,
+            "version":1
+         },
+         {
+            "blockHash":"99594aa44c83a261bfc408d563e2bc67dfc3e357691c8bb4b24dde072149d7d7",
+            "blockIndex":469381,
+            "extra":{
+               "nonce":[
+                  0,
+                  197,
+                  
+                  ...
+
+                  145
+               ],
+               "publicKey":"9e6286c03a8a96fcdf5e60fac543a8fe89705b24c734ffdbca895aebf9b49368",
+               "raw":"022100c536d820595b51fdc742ce173c0e6373d1ba3a4eca85f0bac5790030c5d76c91019e6286c03a8a96fcdf5e60fac543a8fe89705b24c734ffdbca895aebf9b49368",
+               "size":68
+            },
+            "fee":100000000000,
+            "hash":"a71285fcd8afc0d1de2271237294e795f2342b0080f6e79da6b58019427cdeb4",
+            "inBlockchain":true,
+            "inputs":[
+               {
+                  "data":{
+                     "input":{
+                        "amount":80000000000,
+                        "k_image":"7c505592f87c678a19de6d55695e1f9ca51eebca9f5fc1090ff492961e411c90",
+                        "key_offsets":[
+                           57363,
+                           48962,
+                           9654
+                        ]
+                     },
+                     "mixin":3,
+                     "outputs":[
+                        {
+                           "number":3,
+                           "transactionHash":"1b34655c1b6598988b1206dfd62dc42fbe61ab3003076a2c2994f90294c99069"
+                        },
+                        {
+                           "number":8,
+                           "transactionHash":"5c2b7ab136eb5051785be0fef8d421fb85a6eee24599a94673b992adf5339a86"
+                        },
+                        {
+                           "number":6,
+                           "transactionHash":"6a87c5f1c71e24f4a722b45c3c4971efd8f539ed7f243a47ec19beeda1abb6e6"
+                        }
+                     ]
+                  },
+                  "type":"02"
+               },
+               {
+                  "data":{
+                     "input":{
+                        "amount":2000000000,
+                        "k_image":"1f887b2d19c7c3896371c484bd7db755ac5d0b15139f30712646e8f93525f83a",
+                        "key_offsets":[
+                           56150,
+                           21092,
+                           22361
+                        ]
+                     },
+                     "mixin":3,
+                     "outputs":[
+                        {
+                           "number":2,
+                           "transactionHash":"aa4d0bc51b4a174dfbb6784fd9923762e290b578f7ed63ddf5f7f514e185ee3b"
+                        },
+                        {
+                           "number":8,
+                           "transactionHash":"2d157946f5ccb7e36e6e35d4873b3271a9c5de4c76787650ee01fcad5415939c"
+                        },
+                        {
+                           "number":8,
+                           "transactionHash":"e30747b1c95626b821f7ff9a914fab6af3b11fff34a719e6430095a3b85c64d4"
+                        }
+                     ]
+                  },
+                  "type":"02"
+               },
+               {
+                  "data":{
+                     "input":{
+                        "amount":50000,
+                        "k_image":"c736d6cd104baabb88781da7360cde367ec64fb366c1fe71e0057bcd9babeb10",
+                        "key_offsets":[
+                           31474,
+                           3302,
+                           13087
+                        ]
+                     },
+                     "mixin":3,
+                     "outputs":[
+                        {
+                           "number":1,
+                           "transactionHash":"eca2a57c52ce4f3a7b7e795b20eef10211306da199f65a89cf100b622e9fdfc5"
+                        },
+                        {
+                           "number":4,
+                           "transactionHash":"d367618fcec07a38c9790d850bf1b78b3a706bda3cb0eeac067ac2555748f059"
+                        },
+                        {
+                           "number":4,
+                           "transactionHash":"f750d925fef28077ade3cbcfd829256ffbb45f806d7c3d6fdf0e9fb1f6155cf0"
+                        }
+                     ]
+                  },
+                  "type":"02"
+               },
+               {
+                  "data":{
+                     "input":{
+                        "amount":1000000000000,
+                        "k_image":"4a802ba8a9a1776a5d4c966af3468c9858de835bcfd76baedc94752eb33e5c09",
+                        "key_offsets":[
+                           450585,
+                           265093,
+                           305164
+                        ]
+                     },
+                     "mixin":3,
+                     "outputs":[
+                        {
+                           "number":28,
+                           "transactionHash":"8b069352c1b011bdbfa3d15cbbe8c555693a0b981f42d67f12c7781e78fad903"
+                        },
+                        {
+                           "number":52,
+                           "transactionHash":"b77a1f4b74377c9b353c3a7b0db972a5f5447a01f8ac147155cd128b0493cd6c"
+                        },
+                        {
+                           "number":10,
+                           "transactionHash":"94c4f1517d3a416b13a82a1a598864616e137ae887de5d7422462753a7680eef"
+                        }
+                     ]
+                  },
+                  "type":"02"
+               },
+               {
+                  "data":{
+                     "input":{
+                        "amount":6000000000000,
+                        "k_image":"4c9f3fd03425c5027b599c024e5d35cb46ce4dd3ee4aad47f4417ebbeada1247",
+                        "key_offsets":[
+                           71875,
+                           20901,
+                           32218
+                        ]
+                     },
+                     "mixin":3,
+                     "outputs":[
+                        {
+                           "number":5,
+                           "transactionHash":"a2b15b4e6507df28222b44d316f46dcbf9fe8f5ca57ab73ee77646d1581e7e9a"
+                        },
+                        {
+                           "number":6,
+                           "transactionHash":"bf1d927763d34bd30e5e0d58eaa46292bce63832a12b55d02e1269f7db650c9d"
+                        },
+                        {
+                           "number":10,
+                           "transactionHash":"d81f46209a8d8db45fedb93b5bd51af3fdadbfc26cc1cb10c6a0c96bc2fadbae"
+                        }
+                     ]
+                  },
+                  "type":"02"
+               }
+            ],
+            "mixin":3,
+            "outputs":[
+               {
+                  "globalIndex":48133,
+                  "output":{
+                     "amount":50000,
+                     "target":{
+                        "data":{
+                           "key":"25bc53225e619945f947af8b912c822e617e21714c248b11658eba32e0cd5954"
+                        },
+                        "type":"02"
+                     }
+                  }
+               },
+               
+               ...
+
+               {
+                  "globalIndex":201465,
+                  "output":{
+                     "amount":3000000000000,
+                     "target":{
+                        "data":{
+                           "key":"4caeb6b3b5becae0d28eed651f02d70af72c811e0035494753ca8d35c9ef8bed"
+                        },
+                        "type":"02"
+                     }
+                  }
+               }
+            ],
+            "paymentId":"c536d820595b51fdc742ce173c0e6373d1ba3a4eca85f0bac5790030c5d76c91",
+            "signatures":[
+               {
+                  "first":0,
+                  "second":"e213c7baa1c04f4ee504e28f8abcb6c076b9140d56364c727cd043400268a60d0e4fc2a015b435eb4a7c6510bc602240b4f8a4004921872e98e985179865df06"
+               },
+               
+               ...
+
+               {
+                  "first":4,
+                  "second":"d6819e1538523552006d30a8aa05c48cbd93fb491ad8a09cc7efdb5a3a81360a440dc56c3b6cafc9e03288fe1e21178dd4a1cdf11b9b9062f6594ac1ad5c9e01"
+               }
+            ],
+            "signaturesSize":5,
+            "size":1541,
+            "timestamp":1585053091,
+            "totalInputsAmount":7082000050000,
+            "totalOutputsAmount":6982000050000,
+            "unlockTime":0,
+            "version":1
+         }
+      ]
+   }
+}
+```
+
+### checktransactionkey
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "checktransactionkey",
+  "params": {
+    "transaction_id": "494862266B7E511A4F901E7A0EFFB27B012ABA4447D4B0666A010781B7A6FBE5",
+    "address": "KhnaNiHdEdWcLh8VseUa8Z2fv2e6w2rvWgYySWZaEUMSCHFqhJyhWXY6tUeYsqSZ31QANbaZP6Gm7byZomD4xsc9QMye6ZX",
+    "transaction_key": "43210C433EAE73271779652F67DFF20B03591776FE76FEA4FD55D69F237CBC0D"
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "amount":300000000000000,
+      "outputs":[
+         {
+            "amount":300000000000000,
+            "target":{
+               "data":{
+                  "key":"a5bfae862500ab22e600ff90fb7052960fa2e0abb4d129c6c4b494cc4be1337f"
+               },
+               "type":"02"
+            }
+         }
+      ],
+      "status":"OK"
+   }
+}
+```
+
+### checktransactionproof
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "checktransactionproof",
+  "params": {
+    "transaction_id": "2196e40ff4bcd7711f57d7ccd2aab67f8dddf6015ad72ae2b4d63621521a94a9",
+    "destination_address": "Kiwr4Aajn7QefxbAEvHSAcTrVbhzYukfmbDvwWkrDhjFXe1FVUa5ggxCrEv4w2zvaiVZgoF4v7b3cNAbaU3LKQGS9EU9KAd",
+    "signature": "ProofR3Y7go5QVgEx8zvs4LWQ5ghzRifmUtLDXYhEMm2Ku9idhg8S3NEM4eeWDZbGEFCdn6H4GoyZcnQ2FHWb8hteHD3BkGBYDbZ1hA7xoRGY9DX9xCSXSQ2Xb7HDXARjX4YjGfyAWgGZ9f"
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "confirmations":23294,
+      "outputs":[
+         {
+            "amount":100000000000,
+            "target":{
+               "data":{
+                  "key":"de5a651865919d253d08b88bf78f3923f02f9f4002219f23f2bfdc6fac5a9ff6"
+               },
+               "type":"02"
+            }
+         },
+         {
+            "amount":2000000000000,
+            "target":{
+               "data":{
+                  "key":"5f4feea8da71e322dd60c1057ffe80d288322f211ab30e817889d71bc134d040"
+               },
+               "type":"02"
+            }
+         }
+      ],
+      "received_amount":2100000000000,
+      "signature_valid":true,
+      "status":"OK"
+   }
+}
+```
+
+### checktransactionbyviewkey
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "checktransactionbyviewkey",
+  "params": {
+    "transaction_id": "462266B7E511A4F901E7A0EFFB27B012ABA4948447D4B0666A010781B7A6FBE5",
+    "address": "Kiwr4Aajn7QefxbAEvHSAcTrVbhzYukfmbDvwWkrDhjFXe1FVUa5ggxCrEv4w2zvaiVZgoF4v7b3cNAbaU3LKQGS9EU9KAd",
+    "view_key": "4bcd75aef0eaf0c1e34caf024cc1f499a7656083e4921e58552c3c1254e99209"
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "amount":599900000600000,
+      "confirmations":5018,
+      "outputs":[
+         {
+            "amount":600000,
+            "target":{
+               "data":{
+                  "key":"09f79dc4a9c0cc6e32be6cb32a70cc4a4f9f09185627d234470d830004e665eb"
+               },
+               "type":"02"
+            }
+         },
+
+         ...
+
+         {
+            "amount":500000000000000,
+            "target":{
+               "data":{
+                  "key":"21d49839518f2d07524e6710093cdbcedfe4076265f851d117925d18e01ee628"
+               },
+               "type":"02"
+            }
+         }
+      ],
+      "status":"OK"
+   }
+}
+```
+
+### checkreserveproof
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "checkreserveproof",
+  "params": {
+    "address": "Kiwr4Aajn7QefxbAEvHSAcTrVbhzYukfmbDvwWkrDhjFXe1FVUa5ggxCrEv4w2zvaiVZgoF4v7b3cNAbaU3LKQGS9EU9KAd",
+    "height":489000,
+    "message": "this is challenge message",
+    "signature": "RsrvPrf......"
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "good":true,
+      "locked":0,
+      "spent":0,
+      "total":103143982017908
+   }
+}
+```
+
+### validateaddress
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "validateaddress",
+  "params": {
+    "address": "Kd79ZmERRBx3t5uuERi6ggTMMeTBDTLY21cvkEFtE29GY8FJuwQHmWyRxYbPxYBu8S8a7wzxhg3tJfbE27hYGYtbD4mGiSs"
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "address":"Kd79ZmERRBx3t5uuERi6ggTMMeTBDTLY21cvkEFtE29GY8FJuwQHmWyRxYbPxYBu8S8a7wzxhg3tJfbE27hYGYtbD4mGiSs",
+      "is_valid":true,
+      "spend_public_key":"56359b8d0f44eb113916a3dfdcceb99d8ac8b904d7e8c303b40b6e8356c3bbba",
+      "status":"OK",
+      "view_public_key":"1578f4ff1adf2a95364f118ef2f05f2d43a50693d3491fe6b709ff7db9ea546a"
+   }
+}
+```
+
+### verifymessage
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "verifymessage",
+  "params": {
+    "message": "test",
+    "address": "Kiwr4Aajn7QefxbAEvHSAcTrVbhzYukfmbDvwWkrDhjFXe1FVUa5ggxCrEv4w2zvaiVZgoF4v7b3cNAbaU3LKQGS9EU9KAd",
+    "signature": "SigV1RwnRhiLR8MU2S55xj9kEt119U4JcEzbToamAbsZ9qzRD3tDxUEBCCWMNDKCeGqDh25g6Wguq9Fio4SteFfwkUSZP"
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "sig_valid":true,
+      "status":"OK"
    }
 }
 ```
