@@ -24,6 +24,7 @@ Input.
 | Argument      | Mandatory | Description      | Format | Example                                                          |
 |---------------|-----------|------------------|--------|------------------------------------------------------------------|
 | viewSecretKey | No        | Private view key | string | 4a2583e42d010e8aabfed22743789569714196246bf01b5f2fec35af9232d907 |
+| scanHeight    | No        | Height to start scan from | uint32_t | 450000 |
 
 No output in case of success.
 
@@ -63,9 +64,11 @@ Output:
 |-----------------|------------- |--------|----------|
 | blockCount      | Node's known number of blocks | uint32 | 123456 |
 | knownBlockCount | Maximum known number of blocks of all seeds that are connected to the node | uint32 | 123123 |
+| localDaemonBlockCount | Local (synchronized) blocks count | uint32 | 123123 |
 | lastBlockHash   | Hash of the last known block | string | 8a6f1cb7ed7a9db4751d7b283a0482baff20567173dbfae136c9bceb188e51c4 |
 | peerCount       | Connected peers number | uint32 | 5 |
 | minimalFee      | Current minimum transaction fee in atomic units. **Do not use received value 'as is',** but to round it up to one of two first digits after leading zeroes or double it to make sure tx will pass in case of minimalFee fluctuations. | uint64 | 15573245551 |
+| version         | The version of the Payment Gate software | string | 1.7.3.923-eb91ef4d9
 
 Input example:
 ```
@@ -311,7 +314,8 @@ Input:
 |----------------|-----------|------------------------------------------------------------------------------------------------------------------------|---------|---------|
 | secretSpendKey | No        | Private spend key. If secretSpendKey was specified, RPC Wallet creates spend address                                   | string  |         |
 | publicSpendKey | No        | Public spend key. If publicSpendKey was specified, RPC Wallet creates view address                                     | string  |         |
-| reset |        | No        | Determines whether reset wallet or not on address creation with spendKey. By default is true - do reset (old behavior) | boolean |         |
+| scanHeight     | No        | Height from which start synchronization                                                                                | uint32  |         |
+| reset          | No        | Determines whether reset wallet or not on address creation with spendKey. By default is true - do reset (old behavior) | boolean |         |
 
 **Note:** If none of the above mentioned parameters were specified, RPC Wallet creates spend address with generated spend key.
 
@@ -354,7 +358,8 @@ Input:
 | Argument        | Mandatory | Description                                                                                                            | Format  | Example                                                                                                                                                                                                                            |
 |-----------------|-----------|------------------------------------------------------------------------------------------------------------------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | spendSecretKeys | Yes       | Array of strings, where each string is a Private spend key.                                                            | array   | "spendSecretKeys":["fe44fef481ba7f1a309754fcd2dd783090059b4154cf2c6667d7eac5ce00cc0c", "871cf3c3b784959d2b2a0e976328b8b814dc3a381853338471f0fb7c13213801", "a7ecbe49b33dd3f13af7c9c704a0818f139fb7b78c0dc3f82e3050788aac9659"] |
-| reset |         | No        | Determines whether reset wallet or not on address creation with spendKey. By default is true - do reset (old behavior) | boolean |                                                                                                                                                                                                                                    |
+| scanHeights     | No        | Array of uint32, where each is a height to start synchronization from                                                            |                                                                   |
+| reset           | No        | Determines whether reset wallet or not on address creation with spendKey. By default is true - do reset (old behavior) | boolean |                                                                                                                                                                                                                                    |
 
 Output:
 
@@ -848,15 +853,12 @@ Input:
 | Argument      | Mandatory | Description                                                                                                                                                                                                | Format | Example                                                                                                                             |
 |---------------|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|-------------------------------------------------------------------------------------------------------------------------------------|
 | addresses     | No        | Array of strings, where each string is an address to take the funds from                                                                                                                                   | array  | See below                                                                                                                           |
-| transfers     | Yes       | Array that contains:                                                                                                                                                                                       
-                                                                                                                                                                                                                                         
-                             -   address - string                                                                                                                                                                                        
-                             -   amount - int64                                                                                                                                                                                          | array  | "amount": 10000000000, "address": "Kcpg4B4kjwefDeBHGyRdUbgeq5FSYHCof7db8uj6dkFAjkvLSQBc3J7iDSwFx75TUj6MnDYKM5Eu3UmtaAJhvEjdKw1Jkz5" |
+| transfers     | Yes       | Array that contains: `address` - string; `amount` - int64                                                                                                                                                  | array  | "amount": 10000000000, "address": "Kcpg4B4kjwefDeBHGyRdUbgeq5FSYHCof7db8uj6dkFAjkvLSQBc3J7iDSwFx75TUj6MnDYKM5Eu3UmtaAJhvEjdKw1Jkz5" |
 | fee           | Yes       | Transaction fee. Minimal fee in Karbowanec network is .0001 KRB. This parameter should be specified in minimal available KRB units. For example, if your fee is .01 KRB, you should pass it as 10000000000 | uint64 | 1000000                                                                                                                             |
 | unlockTime    | No        | Height of the block until which transaction is going to be locked for spending.                                                                                                                            | uint64 | 0                                                                                                                                   |
 | anonymity     | Yes       | Privacy level (a discrete number from 1 to infinity). Level 6 and higher is recommended.                                                                                                                   | uint64 | 6                                                                                                                                   |
 | extra         | No        | String of variable length. Can contain A-Z, 0-9 characters.                                                                                                                                                | string |                                                                                                                                     |
-| paymentId     | No        | payment\_id                                                                                                                                                                                                | string | somePaymentId                                                                                                                       |
+| paymentId     | No        | payment_id                                                                                                                                                                                                | string | somePaymentId                                                                                                                       |
 | changeAddress | No        | Valid and existing in this container address.                                                                                                                                                              | string | KaUMDHkTqSpaDBtK2pZc4MDaveb2DhQfYiUZ2ACy7evsKYYwWefrvhy34RHNChptMPbefT387qpH7MGkWCsdQJAeGpjmhfz                                     |
 
 Note: if container contains only 1 address, **changeAddress** field can be left empty and the change is going to be sent to this address
@@ -871,52 +873,50 @@ Output:
 |-----------------|-------------------------------|--------|------------------------------------------------------------------|
 | transactionHash | Hash of the sent transaction. | string | 93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f |
 
-Input Example: ```
-
-`{  `
-`  "params":{  `
-`     "anonymity":0,`
-`     "fee":1000000,`
-`     "unlockTime":0,`
-`     "paymentId":"somePaymentId",`
-`     "addresses":[  `
-`        "KbzvFzjQeWCZawinhkDZUKF6pjDv1TLU678poSAEFKWRL3kgWk48sxCN8z6tpfkzMZ82AQyfhiU4uZ66mnU942AHKokr6PG",`
-`        "KiHzZqEzezyaZCP5AdZ1v6K1dAi5aBrU3E9czrZbS6whPUVDBLPLdqU4aiLviNUFfXMEh2kQwSEJGBNpegY6To4wQ9aBwDU",`
-`        "KacpStR6z373JoBgBAVoUch9C1Uzbp3p3e95NJkZtcGPe7sJ3AZNzfzL1qzh7zqvekDxvBZepZGqcRsa7MhCmP3NL27GH5V"`
-`     ],`
-`     "transfers":[  `
-`        {  `
-`           "amount":123456,`
-`           "address":"KbjVbfZkw5eYMMBBYCEoc3TtMe6yNQgPvSepH1KRqxhc3Pr2VBtFLrtD1E6oQAEbtJQsbJrtqWjMoKo1q5HtKAFdUcYBH41"`
-`        },`
-`        {  `
-`           "amount":234567,`
-`           "address":"Kis97C9AM1PQataUmbpjmXbZz2KSynxgURYb8moceDPXVWBwt4pjGtvAmfY3qmhcrBZgyKfLGnhGCW8LxBHGiDrrC5GLjhD"`
-`        },`
-`        {  `
-`           "amount":345678,`
-`           "address":"KdAzF8benG4aygdY5v5R5j8bLrzN1hSTfb2c8UneNbNW1VB4QnWD7SSPGpne17HGiLhid1VGq73B3Wc6ZWLaq2GZEaw9hrc"`
-`        }`
-`     ],`
-`     "changeAddress":"KbzvFzjQeWCZawinhkDZUKF6pjDv1TLU678poSAEFKWRL3kgWk48sxCN8z6tpfkzMZ82AQyfhiU4uZ66mnU942AHKokr6PG"`
-`  },`
-`  "jsonrpc":"2.0",`
-`  "id":"test",`
-`  "method":"sendTransaction"`
-`}`
-
+Input Example:
+```
+{  
+  "params":{  
+     "anonymity":0,
+     "fee":1000000,
+     "unlockTime":0,
+     "paymentId":"somePaymentId",
+     "addresses":[  
+        "KbzvFzjQeWCZawinhkDZUKF6pjDv1TLU678poSAEFKWRL3kgWk48sxCN8z6tpfkzMZ82AQyfhiU4uZ66mnU942AHKokr6PG",
+        "KiHzZqEzezyaZCP5AdZ1v6K1dAi5aBrU3E9czrZbS6whPUVDBLPLdqU4aiLviNUFfXMEh2kQwSEJGBNpegY6To4wQ9aBwDU",
+        "KacpStR6z373JoBgBAVoUch9C1Uzbp3p3e95NJkZtcGPe7sJ3AZNzfzL1qzh7zqvekDxvBZepZGqcRsa7MhCmP3NL27GH5V"
+     ],
+     "transfers":[  
+        {  
+           "amount":123456,`
+           "address":"KbjVbfZkw5eYMMBBYCEoc3TtMe6yNQgPvSepH1KRqxhc3Pr2VBtFLrtD1E6oQAEbtJQsbJrtqWjMoKo1q5HtKAFdUcYBH41"
+        },
+        {  
+           "amount":234567,
+           "address":"Kis97C9AM1PQataUmbpjmXbZz2KSynxgURYb8moceDPXVWBwt4pjGtvAmfY3qmhcrBZgyKfLGnhGCW8LxBHGiDrrC5GLjhD"
+        },
+        {  
+           "amount":345678,
+           "address":"KdAzF8benG4aygdY5v5R5j8bLrzN1hSTfb2c8UneNbNW1VB4QnWD7SSPGpne17HGiLhid1VGq73B3Wc6ZWLaq2GZEaw9hrc"
+        }
+     ],
+     "changeAddress":"KbzvFzjQeWCZawinhkDZUKF6pjDv1TLU678poSAEFKWRL3kgWk48sxCN8z6tpfkzMZ82AQyfhiU4uZ66mnU942AHKokr6PG"
+  },
+  "jsonrpc":"2.0",
+  "id":"test",
+  "method":"sendTransaction"
+}
 ```
 
-Return value example: ```
-
-`{  `
-`  "jsonrpc":"2.0",`
-`  "id":"test",`
-`  "result":{  `
-`     "transactionHash":"93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f"`
-`  }`
-`}`
-
+Return value example:
+```
+{  
+  "jsonrpc":"2.0",
+  "id":"test",
+  "result":{  
+     "transactionHash":"93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f"
+  }
+}
 ```
 
 Estimate fusion
@@ -940,35 +940,33 @@ Output:
 | totalOutputCount | Total number of unspent outputs of the specified addresses. | uint64 | 1000    |
 | fusionReadyCount | Number of outputs that can be optimized.                    | uint64 | 50      |
 
-Input example: ```
-
-`{  `
-`  "params":{  `
-`     "threshold":1000000,`
-`     "addresses":[  `
-`        "Kis97C9AM1PQataUmbpjmXbZz2KSynxgURYb8moceDPXVWBwt4pjGtvAmfY3qmhcrBZgyKfLGnhGCW8LxBHGiDrrC5GLjhD",`
-`        "KdAzF8benG4aygdY5v5R5j8bLrzN1hSTfb2c8UneNbNW1VB4QnWD7SSPGpne17HGiLhid1VGq73B3Wc6ZWLaq2GZEaw9hrc",`
-`        "KbzvFzjQeWCZawinhkDZUKF6pjDv1TLU678poSAEFKWRL3kgWk48sxCN8z6tpfkzMZ82AQyfhiU4uZ66mnU942AHKokr6PG"`
-`     ]`
-`  },`
-`  "jsonrpc":"2.0",`
-`  "id":"test",`
-`  "method":"estimateFusion"`
-`}`
-
+Input example:
+```
+{  
+  "params":{  
+     "threshold":1000000,
+     "addresses":[  
+        "Kis97C9AM1PQataUmbpjmXbZz2KSynxgURYb8moceDPXVWBwt4pjGtvAmfY3qmhcrBZgyKfLGnhGCW8LxBHGiDrrC5GLjhD",
+        "KdAzF8benG4aygdY5v5R5j8bLrzN1hSTfb2c8UneNbNW1VB4QnWD7SSPGpne17HGiLhid1VGq73B3Wc6ZWLaq2GZEaw9hrc",
+        "KbzvFzjQeWCZawinhkDZUKF6pjDv1TLU678poSAEFKWRL3kgWk48sxCN8z6tpfkzMZ82AQyfhiU4uZ66mnU942AHKokr6PG"
+     ]
+  },
+  "jsonrpc":"2.0",
+  "id":"test",
+  "method":"estimateFusion"
+}
 ```
 
-Output example: ```
-
-`{`
-`  "jsonrpc":"2.0",`
-`  "id":"test",`
-`  "result":{  `
-`     "totalOutputCount":1000,`
-`     "fusionReadyCount":50`
-`  }`
-`}`
-
+Output example:
+```
+{
+  "jsonrpc":"2.0",
+  "id":"test",
+  "result":{  
+     "totalOutputCount":1000,
+     "fusionReadyCount":50
+  }`
+}
 ```
 
 Send fusion transaction
@@ -999,36 +997,34 @@ Output:
 |-----------------|-------------------------------|--------|------------------------------------------------------------------|
 | transactionHash | Hash of the sent transaction. | string | 93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f |
 
-Input Example: ```
-
-`{  `
-`  "params":{  `
-`     "anonymity":6,`
-`     "threshold":1000000,`
-`     "addresses":[  `
-`        "Kis97C9AM1PQataUmbpjmXbZz2KSynxgURYb8moceDPXVWBwt4pjGtvAmfY3qmhcrBZgyKfLGnhGCW8LxBHGiDrrC5GLjhD",`
-`        "KdAzF8benG4aygdY5v5R5j8bLrzN1hSTfb2c8UneNbNW1VB4QnWD7SSPGpne17HGiLhid1VGq73B3Wc6ZWLaq2GZEaw9hrc",`
-`        "KbzvFzjQeWCZawinhkDZUKF6pjDv1TLU678poSAEFKWRL3kgWk48sxCN8z6tpfkzMZ82AQyfhiU4uZ66mnU942AHKokr6PG"`
-`     ],`
-`     "destinationAddress":"Kak1Nwr16RtJ5M4wLVM7bnAXSMgimsgxiQtoSTXSBUrsQHQ6CbLKeXwimHyn2iqorN2DqL2b4HcaiJLvPmRbUMVXJTLqbjT"`
-`  },`
-`  "jsonrpc":"2.0",`
-`  "id":"test",`
-`  "method":"sendFusionTransaction"`
-`}`
-
+Input Example: 
+```
+{  
+  "params":{  
+     "anonymity":6,
+     "threshold":1000000,
+     "addresses":[  
+        "Kis97C9AM1PQataUmbpjmXbZz2KSynxgURYb8moceDPXVWBwt4pjGtvAmfY3qmhcrBZgyKfLGnhGCW8LxBHGiDrrC5GLjhD",
+        "KdAzF8benG4aygdY5v5R5j8bLrzN1hSTfb2c8UneNbNW1VB4QnWD7SSPGpne17HGiLhid1VGq73B3Wc6ZWLaq2GZEaw9hrc",
+        "KbzvFzjQeWCZawinhkDZUKF6pjDv1TLU678poSAEFKWRL3kgWk48sxCN8z6tpfkzMZ82AQyfhiU4uZ66mnU942AHKokr6PG"
+     ],
+     "destinationAddress":"Kak1Nwr16RtJ5M4wLVM7bnAXSMgimsgxiQtoSTXSBUrsQHQ6CbLKeXwimHyn2iqorN2DqL2b4HcaiJLvPmRbUMVXJTLqbjT"
+  },
+  "jsonrpc":"2.0",
+  "id":"test",
+  "method":"sendFusionTransaction"
+}
 ```
 
-Return value example: ```
-
-`{  `
-`  "jsonrpc":"2.0",`
-`  "id":"test",`
-`  "result":{  `
-`     "transactionHash":"93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f"`
-`  }`
-`}`
-
+Return value example:
+```
+{  
+  "jsonrpc":"2.0",
+  "id":"test",
+  "result":{  
+     "transactionHash":"93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f"
+  }
+}
 ```
 
 Validate address
@@ -1051,29 +1047,29 @@ Output:
 | spendPublicKey | Public spend key                        | string  | 17d068a5d62767661597779af63b7938f1e723052a2d0b8ed8fc6680cde3f88b                                |
 | viewPublicKey  | Public view key                         | string  | 32c547698847b6f9b04bc9035a8d97074d2c09bd8ef63f67b0941f30c8f39e9a                                |
 
-Input Example: ```
-
-`{`
-`   "jsonrpc":"2.0",`
-`   "method":"validateAddress",`
-`   "params":{`
-`       "address":"Kak1Nwr16RtJ5M4wLVM7bnAXSMgimsgxiQtoSTXSBUrsQHQ6CbLKeXwimHyn2iqorN2DqL2b4HcaiJLvPmRbUMVXJTLqbjT"`
-`   }`
-`}`
-
+Input Example:
+```
+{
+   "jsonrpc":"2.0",
+   "method":"validateAddress",
+   "params":{
+       "address":"Kak1Nwr16RtJ5M4wLVM7bnAXSMgimsgxiQtoSTXSBUrsQHQ6CbLKeXwimHyn2iqorN2DqL2b4HcaiJLvPmRbUMVXJTLqbjT"
+   }
+}
 ```
 
-Return value example: ``` {
-
-`   "jsonrpc": "2.0",`
-`   "result": {`
-`       "address": "Kak1Nwr16RtJ5M4wLVM7bnAXSMgimsgxiQtoSTXSBUrsQHQ6CbLKeXwimHyn2iqorN2DqL2b4HcaiJLvPmRbUMVXJTLqbjT",`
-`       "isvalid": true,`
-`       "spendPublicKey": "17d068a5d62767661597779af63b7938f1e723052a2d0b8ed8fc6680cde3f88b",`
-`       "viewPublicKey": "32c547698847b6f9b04bc9035a8d97074d2c09bd8ef63f67b0941f30c8f39e9a"`
-`   }`
-
-} ```
+Return value example: 
+```
+{
+   "jsonrpc": "2.0",
+   "result": {
+       "address": "Kak1Nwr16RtJ5M4wLVM7bnAXSMgimsgxiQtoSTXSBUrsQHQ6CbLKeXwimHyn2iqorN2DqL2b4HcaiJLvPmRbUMVXJTLqbjT",
+       "isvalid": true,
+       "spendPublicKey": "17d068a5d62767661597779af63b7938f1e723052a2d0b8ed8fc6680cde3f88b",
+       "viewPublicKey": "32c547698847b6f9b04bc9035a8d97074d2c09bd8ef63f67b0941f30c8f39e9a"
+   }
+}
+```
 
 Create delayed transaction
 --------------------------
@@ -1093,7 +1089,7 @@ Input:
 | unlockTime    | No        | Height of the block until which transaction is going to be locked for spending.          | uint64 | 0                                                                                                                                   |
 | anonymity     | Yes       | Privacy level (a discrete number from 1 to infinity). Level 6 and higher is recommended. | uint64 | 6                                                                                                                                   |
 | extra         | No        | String of variable length. Can contain A-Z, 0-9 characters.                              | string | something123                                                                                                                        |
-| paymentId     | No        | payment\_id                                                                              | string | f9e13241e0b31844aa7ec17768e2dcb41c268bed84b3d0f7e4be9e8bde625212                                                                    |
+| paymentId     | No        | payment_id                                                                               | string | f9e13241e0b31844aa7ec17768e2dcb41c268bed84b3d0f7e4be9e8bde625212                                                                    |
 | changeAddress | No        | Valid and existing in this container address.                                            | string | Kak1Nwr16RtJ5M4wLVM7bnAXSMgimsgxiQtoSTXSBUrsQHQ6CbLKeXwimHyn2iqorN2DqL2b4HcaiJLvPmRbUMVXJTLqbjT                                     |
 
 Note: if container contains only 1 address, **changeAddress** field can be left empty and the change is going to be sent to this address
@@ -1110,51 +1106,52 @@ Output:
 |-----------------|-------------------------------|--------|------------------------------------------------------------------|
 | transactionHash | Hash of the sent transaction. | string | 93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f |
 
-Input Example: ``` {
-
-` "params":{  `
-`    "anonymity":0,`
-`    "fee":1000000,`
-`    "unlockTime":0,`
-`    "paymentId":"somePaymentId",`
-`    "addresses":[  `
-`       "KcQTbNJrh5kPVu2oJbRGA2AZAjiRdkZDMVuvzirpJD1jirBcZm4LBF5GhBb2Z4ycW8QJ35DcVpx4phx8eYbHKwHbFkKp6HF",`
-`       "KayLEZuEn35Fk7jxFrSJjACYdiNJUJUZJHqqAjyrxceCQhAemA8BFZjBKpER6zXd7zCUNm1Dw9SKc44cLtFKx8i86UQVN9s",`
-`       "Kj93UPwkr996gz7YnEbvt2MbdJH9B1LVDerpU3ccei8p7YYU1U6knMFPFLPLu1HqcVRHZWh7w5EgQYjqTZnpDTcZQM8WXh9"`
-`    ],`
-`    "transfers":[  `
-`       {  `
-`          "amount":123456,`
-`          "address":"KhSU5yrrqJXYE77xXXDiybNpvngkGAZ5S4pqfwTDLbPRceaUAuVQasmG5DZfjkhH3n62MMBfTyHGY7W772bTjMZsS6tMtsT"`
-`       },`
-`       {  `
-`          "amount":234567,`
-`          "address":"KengGF55Xgo48K6Z5qwfgF3zFMve4gaFy6GyifShHndjLeDn4Mb2PHrR2CYCUKfneRSvFujPHoeZwbMdTziCXw2jDwhThy3"`
-`       },`
-`       {  `
-`          "amount":345678,`
-`          "address":"Ka6VdMqB6XuLwvMyJsfBakaD3FzxJ1EFDcM3fHx96SvKbPZUcMVTtTsQuB3LxVBfKaYh1jTNNfyvJEKrGoysWyUZKTPv6hL"`
-`       }`
-`    ],`
-`    "changeAddress":"KcQTbNJrh5kPVu2oJbRGA2AZAjiRdkZDMVuvzirpJD1jirBcZm4LBF5GhBb2Z4ycW8QJ35DcVpx4phx8eYbHKwHbFkKp6HF"`
-` },`
-` "jsonrpc":"2.0",`
-` "id":"test",`
-` "method":"createDelayedTransaction"`
-
-} ```
+Input Example: 
+```
+{
+ "params":{  
+    "anonymity":0,
+    "fee":1000000,
+    "unlockTime":0,
+    "paymentId":"somePaymentId",
+    "addresses":[  
+       "KcQTbNJrh5kPVu2oJbRGA2AZAjiRdkZDMVuvzirpJD1jirBcZm4LBF5GhBb2Z4ycW8QJ35DcVpx4phx8eYbHKwHbFkKp6HF",
+       "KayLEZuEn35Fk7jxFrSJjACYdiNJUJUZJHqqAjyrxceCQhAemA8BFZjBKpER6zXd7zCUNm1Dw9SKc44cLtFKx8i86UQVN9s",
+       "Kj93UPwkr996gz7YnEbvt2MbdJH9B1LVDerpU3ccei8p7YYU1U6knMFPFLPLu1HqcVRHZWh7w5EgQYjqTZnpDTcZQM8WXh9"
+    ],
+    "transfers":[  
+       {  
+          "amount":123456,
+          "address":"KhSU5yrrqJXYE77xXXDiybNpvngkGAZ5S4pqfwTDLbPRceaUAuVQasmG5DZfjkhH3n62MMBfTyHGY7W772bTjMZsS6tMtsT"
+       },
+       {  
+          "amount":234567,
+          "address":"KengGF55Xgo48K6Z5qwfgF3zFMve4gaFy6GyifShHndjLeDn4Mb2PHrR2CYCUKfneRSvFujPHoeZwbMdTziCXw2jDwhThy3"
+       },
+       {  
+          "amount":345678,
+          "address":"Ka6VdMqB6XuLwvMyJsfBakaD3FzxJ1EFDcM3fHx96SvKbPZUcMVTtTsQuB3LxVBfKaYh1jTNNfyvJEKrGoysWyUZKTPv6hL"
+       }
+    ],
+    "changeAddress":"KcQTbNJrh5kPVu2oJbRGA2AZAjiRdkZDMVuvzirpJD1jirBcZm4LBF5GhBb2Z4ycW8QJ35DcVpx4phx8eYbHKwHbFkKp6HF"
+ },
+ "jsonrpc":"2.0",
+ "id":"test",
+ "method":"createDelayedTransaction"
+} 
+```
 
 Return value example:
 
-``` {
-
-` "jsonrpc":"2.0",`
-` "id":"test",`
-` "result":{  `
-`    "transactionHash":"93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f"`
-` }`
-
-} ```
+```
+{
+ "jsonrpc":"2.0",
+ "id":"test",
+ "result":{  
+    "transactionHash":"93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f"
+ }
+}
+```
 
 Send delayed transaction
 ------------------------
@@ -1173,26 +1170,26 @@ In case of success returns an empty JSON object.
 
 Input example:
 
-``` {
-
-` "params":{  `
-`    "transactionHash":"c671d1005eaaf7c51b1e23eeec1c899e43fa7a332cdc2bcf1e45b908e23d8837"`
-` },`
-` "jsonrpc":"2.0",`
-` "id":"test",`
-` "method":"sendDelayedTransaction"`
-
-} ```
+```
+{
+ "params":{  
+    "transactionHash":"c671d1005eaaf7c51b1e23eeec1c899e43fa7a332cdc2bcf1e45b908e23d8837"
+ },
+ "jsonrpc":"2.0",
+ "id":"test",
+ "method":"sendDelayedTransaction"
+}
+```
 
 Output example:
 
-``` {
-
-`   "id":"1",`
-`   "jsonrpc":"2.0",`
-`   "result": {}`
-
-} ```
+```
+{
+   "id":"1",
+   "jsonrpc":"2.0",
+   "result": {}
+}
+```
 
 Get delayed transaction hashes
 ------------------------------
@@ -1209,30 +1206,30 @@ Output:
 
 Input example:
 
-``` {
-
-`   "jsonrpc": "2.0", `
-`   "id": "1", `
-`   "method": "getDelayedTransactionHashes"`
-
-} ```
+```
+{
+   "jsonrpc": "2.0", 
+   "id": "1", 
+   "method": "getDelayedTransactionHashes"
+}
+```
 
 Output example:
 
-``` {
-
-` "jsonrpc":"2.0",`
-` "id":"test",`
-` "result":{  `
-`          "transactionHashes":[  `
-`              "957dcbf54f327846ea0c7a16b2ae8c24ba3fa8305cc3bbc6424e85e7d358b44b",`
-`              "25bb751814dd39bf46c972bd760e7516e34200f5e5dd02fda696671e11201f78"`
-`          ],`
-`       }`
-`    ]`
-` }`
-
-} ```
+```
+{
+ "jsonrpc":"2.0",
+ "id":"test",
+ "result":{  
+          "transactionHashes":[  
+              "957dcbf54f327846ea0c7a16b2ae8c24ba3fa8305cc3bbc6424e85e7d358b44b",
+              "25bb751814dd39bf46c972bd760e7516e34200f5e5dd02fda696671e11201f78"
+          ],
+       }
+    ]
+ }
+}
+```
 
 Delete delayed transaction
 --------------------------
@@ -1251,26 +1248,23 @@ In case of success returns an empty JSON object.
 
 Input example:
 
-``` {
-
-`  "params":{  `
-`     "transactionHash":"c671d1005eaaf7c51b1e23eeec1c899e43fa7a332cdc2bcf1e45b908e23d8837"`
-`  },`
-`  "jsonrpc":"2.0",`
-`  "id":"test",`
-`  "method":"deleteDelayedTransaction"`
-`}`
-
+```
+{
+  "params":{  
+     "transactionHash":"c671d1005eaaf7c51b1e23eeec1c899e43fa7a332cdc2bcf1e45b908e23d8837"
+  },
+  "jsonrpc":"2.0",
+  "id":"test",
+  "method":"deleteDelayedTransaction"
+}
 ```
 
 Output example:
 
 ```
-
-`{`
-`   "id":"1",`
-`   "jsonrpc":"2.0",`
-`   "result": {}`
-`}`
-
+{
+   "id":"1",
+   "jsonrpc":"2.0",
+   "result": {}
+}
 ```
