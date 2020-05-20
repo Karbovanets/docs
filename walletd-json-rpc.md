@@ -1,4 +1,4 @@
-On this page you will find description of every method in Karbowanec RPC Wallet API. Karbowanec RPC Wallet is a HTTP server which provides JSON 2.0 RPC interface for Karbowanec payment operations and address management. Each method has its own page that can be found by clicking on this method.
+On this page you will find description of every method in Karbowanec RPC Wallet (Payment Gate) API. Karbowanec RPC Wallet is a HTTP server which provides JSON 2.0 RPC interface for Karbowanec payment operations and address management. Each method has its own page that can be found by clicking on this method.
 
 More on how to start and operate Karbowanec RPC Wallet can be found here: [Karbowanec RPC Wallet](karbo-walletd.md)
 
@@ -51,6 +51,7 @@ Output value example:
 }
 ```
 
+
 Get status
 ----------
 
@@ -95,6 +96,7 @@ Output example:
 }
 ```
 
+
 Save
 ----
 
@@ -124,6 +126,7 @@ Output value example:
 }
 ```
 
+
 Export
 ------
 
@@ -152,6 +155,7 @@ Output value example:
 ```
 { "id": "test", "jsonrpc": "2.0", "result": {} }
 ```
+
 
 Get view key
 ------------
@@ -187,6 +191,7 @@ Return value example:
   }
 }
 ```
+
 
 Get spend keys
 --------------
@@ -228,10 +233,11 @@ Return value example:
 }
 ```
 
+
 Get mnemonic seed
 -----------------
 
-**getMnemonicSeed()** method returns your first address' spend key and derived from this spend key common private view key of the container if it was created with option `--deterministic`.
+**getMnemonicSeed()** method returns your **first address**' *spend secret key* and derived from this spend key common private view key of the container if it was created with option `--deterministic`.
 
 | Argument | Mandatory | Description                                               | Format | Example                                                                                         |
 |----------|-----------|-----------------------------------------------------------|--------|-------------------------------------------------------------------------------------------------|
@@ -265,6 +271,7 @@ Return value example:
   }
 }
 ```
+
 
 Get addresses
 -------------
@@ -302,6 +309,7 @@ Output example:
   }
 }
 ```
+
 
 Create address
 --------------
@@ -347,6 +355,7 @@ Output value example:
   }
 }
 ```
+
 
 Create address list
 -------------------
@@ -394,6 +403,7 @@ Output value example:
 }
 ```
 
+
 Delete address
 --------------
 
@@ -429,6 +439,7 @@ Output example:
   }
 }
 ```
+
 
 Get balance
 -----------
@@ -472,6 +483,7 @@ Output example:
   }
 }
 ```
+
 
 Get block hashes
 ----------------
@@ -525,6 +537,7 @@ Output example:
   }
 }
 ```
+
 
 Get transaction hashes
 ----------------------
@@ -588,6 +601,7 @@ Output example:
   }
 }
 ```
+
 
 Get transactions
 ----------------
@@ -710,6 +724,7 @@ Output example:
 }
 ```
 
+
 Get unconfirmed transaction hashes
 ----------------------------------
 
@@ -760,6 +775,7 @@ Output example:
   }
 }
 ```
+
 
 Get transaction
 ---------------
@@ -843,6 +859,7 @@ Output example:
 }
 ```
 
+
 Send transaction
 ----------------
 
@@ -919,6 +936,7 @@ Return value example:
 }
 ```
 
+
 Estimate fusion
 ---------------
 
@@ -968,6 +986,7 @@ Output example:
   }`
 }
 ```
+
 
 Send fusion transaction
 -----------------------
@@ -1027,6 +1046,7 @@ Return value example:
 }
 ```
 
+
 Validate address
 ----------------
 
@@ -1070,6 +1090,7 @@ Return value example:
    }
 }
 ```
+
 
 Create delayed transaction
 --------------------------
@@ -1153,6 +1174,7 @@ Return value example:
 }
 ```
 
+
 Send delayed transaction
 ------------------------
 
@@ -1190,6 +1212,7 @@ Output example:
    "result": {}
 }
 ```
+
 
 Get delayed transaction hashes
 ------------------------------
@@ -1231,6 +1254,7 @@ Output example:
 }
 ```
 
+
 Delete delayed transaction
 --------------------------
 
@@ -1268,3 +1292,104 @@ Output example:
    "result": {}
 }
 ```
+
+
+Sign message
+------------
+
+**signMessage()** allows to sign message with wallet keys.
+
+Input:
+
+| Argument        | Mandatory | Description                         | Format | Example                                                          |
+|-----------------|-----------|-------------------------------------|--------|------------------------------------------------------------------|
+| address         | No        | Public address for keys used to sign message | string |                                                         |
+| message         | Yes       | The message to sign                 | string | test                                                             |
+
+**Note:** if **address** is not provided, default main (first) address is used to sign the message.
+
+Output:
+
+| Argument          | Description                                               | Format  | Example   |
+|-------------------|-----------------------------------------------------------|---------|-----------|
+| adddress          | Address, used to sing the message (useful in case it was omitted in request) | string | |
+| signature         | The signature generated with wallet keys                  | string  | SigV16DzpgqS3dQJZMLcTfjhFivsYjC7UCkUdS1DLFUujUkHdyoRnADcpPjv66JXgeQU5ujTc5UnEPTfwDqJTUSXUUg5jM2MmRi |
+
+Input example:
+
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "signMessage",
+  "params":{
+    "message":"test"
+  }
+}
+```
+
+Output example:
+
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "address":"Kcwr4Awjn7QefxbAEvHSAcTrVbhzYukfmbDvwWkrDhjFXe1FVUj5ggxCrEv4w2zv6iVZgoF4v7b3cNAbaU3LKQGS9EU9KAd",
+      "signature":"SigV16DzpgqS3dQJZMLcTfjhFivsYjC7UCkUdS1DLFUujUkHdyoRnADcpPjv66JXgeQU5ujTc5UnEPTfwDqJTUSXUUg5jM2MmRi"
+   }
+}
+```
+
+
+Verify message
+--------------
+
+**verifyMessage()** method is used to verify signed message.
+
+Input:
+
+| Argument        | Mandatory | Description                         | Format | Example                                                          |
+|-----------------|-----------|-------------------------------------|--------|------------------------------------------------------------------|
+| address         | Yes       | Public address for keys used to sign message | string | |
+| message         | Yes       | The message to sign | string | |
+| signature       | Yes       | The signature | string | SigV16DzpgqS3dQJZMLcTfjhFivsYjC7UCkUdS1DLFUujUkHdyoRnADcpPjv66JXgeQU5ujTc5UnEPTfwDqJTUSXUUg5jM2MmRi |
+
+
+Output:
+
+| Argument          | Description                                               | Format  | Example   |
+|-------------------|-----------------------------------------------------------|---------|-----------|
+| isValid           | Denotes whether signature of message is valid or not      | boolean | See below |
+
+
+Input example:
+
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "verifyMessage",
+  "params":{
+    "address":"Kcwr4Awjn7QefxbAEvHSAcTrVbhzYukfmbDvwWkrDhjFXe1FVUj5ggxCrEv4w2zv6iVZgoF4v7b3cNAbaU3LKQGS9EU9KAd",
+    "message":"test",
+    "signature":"SigV16DzpgqS3dQJZMLcTfjhFivsYjC7UCkUdS1DLFUujUkHdyoRnADcpPjv66JXgeQU5ujTc5UnEPTfwDqJTUSXUUg5jM2MmRi"
+  }
+}
+```
+Output example:
+
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "isValid":true
+   }
+}
+```
+
+
+
+
+
