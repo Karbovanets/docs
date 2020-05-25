@@ -44,6 +44,49 @@ count            | Current chain height | int
 status           | Status of request    | string
 
 
+### getblockslist
+
+`getblockslist()` method returns a list of blocks short info.
+
+Argument        | Mandatory     | Description           | Format
+--------------- | ------------- | --------------------- | ------
+height          | Yes           | The staring height of blocks to be retrieved. | int
+count           | No            | The number of blocks to retrieve. | int
+
+**Output**
+
+Argument         | Description          | Format
+---------------- | -------------------- | ------
+blocks           | The list of block short info | array
+
+block short response attributes:
+
+Argument         | Description          | Format
+---------------- | -------------------- | ------
+timestamp        | The timestamp of the block | int
+height           | The height of the block | int
+hash             | The hash of the block | string
+transactions_count | The number of transactions in block | int
+cumulative_size  | Total size of the block | int
+difficulty       | Block's difficulty | int
+min_fee          | Minimal transaction fee at the height of the block | int
+
+
+### getaltblockslist
+
+`getaltblockslist()` method returns a list of alt. blocks short info.
+
+No Input.
+
+**Output**
+
+Argument         | Description          | Format
+---------------- | -------------------- | ------
+alt_blocks       | The list of block short info | array
+
+Alt. block short response attributes: see [getblockslist](#getblockslist).
+
+
 ### getblockhash
 
 `getblockhash()` method returns block hash by its height.
@@ -669,6 +712,92 @@ Output:
  	}
  }
 ```
+
+
+### getblockslist
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "getblockslist",
+  "params": {
+    "height": 100000,
+    "count": 10
+  }
+}
+```
+Output: 
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "blocks":[
+         {
+            "cumulative_size":405,
+            "difficulty":18484080,
+            "hash":"f9940a120ca47d23e014078d7bbfd59f6ce4f20831a4e011b02ff73fcf0372da",
+            "height":100000,
+            "min_fee":100000000000,
+            "timestamp":1492672031,
+            "transactions_count":1
+         },
+
+         ...
+
+         {
+            "cumulative_size":405,
+            "difficulty":24697711,
+            "hash":"8f345a2656da4fd1da0c09193ea177af3ac69ea20f1d5090fbc507cc196ed2d6",
+            "height":99990,
+            "min_fee":100000000000,
+            "timestamp":1492668959,
+            "transactions_count":1
+         }
+      ],
+      "status":"OK"
+   }
+}
+```
+
+
+### getaltblockslist
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "getaltblockslist",
+  "params": {
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "alt_blocks":[
+         {
+            "cumulative_size":405,
+            "difficulty":13913696485,
+            "hash":"2d7cc8c350e1152a9a9178638c09e8c02362c9a19cfe51a3a3722b8a95588afd",
+            "height":490523,
+            "min_fee":100000000000,
+            "timestamp":1590163198,
+            "transactions_count":1
+         }
+      ],
+      "status":"OK"
+   }
+}
+```
+
+
 ### getblockhash
 
 Input:
@@ -690,6 +819,8 @@ Output:
  	"result": "a7428..."
  }
 ```
+
+
 ### getblocktemplate
 
 Input:
@@ -718,6 +849,8 @@ Output:
  	}
  }
 ```
+
+
 ### submitblock
 
 Input: 
@@ -739,6 +872,8 @@ Output:
  	}
  }
 ```
+
+
 ### getlastblockheader
 
 Input:
@@ -772,6 +907,8 @@ Output:
  	}
  }
 ```
+
+
 ### getblockheaderbyhash
 
 Input:
@@ -808,6 +945,8 @@ Output:
  	}
  }
 ```
+
+
 ### getblockheaderbyheight
 
 Input:
@@ -844,6 +983,7 @@ Output:
  	}
  }
 ```
+
 
 ### getblockbyheight
 
@@ -924,6 +1064,7 @@ Output:
 }
 ```
 
+
 ### getblockbyhash
 
 Input:
@@ -979,6 +1120,7 @@ Output:
 }
 ```
 
+
 ### getblocksbyheights
 
 Input:
@@ -1031,6 +1173,7 @@ Output:
    }
 }
 ```
+
 
 ### getblocksbyhashes
 
@@ -1088,6 +1231,7 @@ Output:
 }
 ```
 
+
 ### getblocktimestamp
 
 Input:
@@ -1113,6 +1257,7 @@ Output:
 }
 ```
 
+
 ### getcurrencyId
 
 Input:
@@ -1133,6 +1278,7 @@ Output:
  	}
  }
 ```
+
 
 ### gettransaction
 
@@ -1291,6 +1437,7 @@ Output:
 }
 ```
 
+
 ### gettransactionspool
 
 Input:
@@ -1346,6 +1493,7 @@ or
 }
 ```
 
+
 ### gettransactionsbypaymentid
 
 Input:
@@ -1387,6 +1535,7 @@ Output:
 }
 ```
 
+
 ### gettransactionhashesbypaymentid
 Input:
 ```
@@ -1418,6 +1567,7 @@ Output:
    }
 }
 ```
+
 
 ### gettransactionsbyhashes
 Input:
@@ -1826,6 +1976,7 @@ Output:
 }
 ```
 
+
 ### checktransactionkey
 Input:
 ```
@@ -1862,6 +2013,7 @@ Output:
    }
 }
 ```
+
 
 ### checktransactionproof
 Input:
@@ -1910,6 +2062,7 @@ Output:
    }
 }
 ```
+
 
 ### checktransactionbyviewkey
 Input:
@@ -1961,6 +2114,7 @@ Output:
 }
 ```
 
+
 ### checkreserveproof
 Input:
 ```
@@ -1990,6 +2144,7 @@ Output:
 }
 ```
 
+
 ### validateaddress
 Input:
 ```
@@ -2016,6 +2171,7 @@ Output:
    }
 }
 ```
+
 
 ### verifymessage
 Input:
