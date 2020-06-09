@@ -1084,7 +1084,7 @@ Return value example:
    "jsonrpc": "2.0",
    "result": {
        "address": "Kak1Nwr16RtJ5M4wLVM7bnAXSMgimsgxiQtoSTXSBUrsQHQ6CbLKeXwimHyn2iqorN2DqL2b4HcaiJLvPmRbUMVXJTLqbjT",
-       "isValid": true,
+       "isvalid": true,
        "spendPublicKey": "17d068a5d62767661597779af63b7938f1e723052a2d0b8ed8fc6680cde3f88b",
        "viewPublicKey": "32c547698847b6f9b04bc9035a8d97074d2c09bd8ef63f67b0941f30c8f39e9a"
    }
@@ -1102,10 +1102,7 @@ Input:
 | Argument      | Mandatory | Description                                                                              | Format | Example                                                                                                                             |
 |---------------|-----------|------------------------------------------------------------------------------------------|--------|-------------------------------------------------------------------------------------------------------------------------------------|
 | addresses     | No        | Array of strings, where each string is an address                                        | array  | See below                                                                                                                           |
-| transfers     | Yes       | Array that contains:                                                                     
-                                                                                                                       
-                             -   address – string                                                                      
-                             -   amount – int64                                                                        | array  | "amount": 10000000000, "address": "KicW5PKpT2FQb8YKzKfQu27reK6FDZdnAEZ3dUbAoMwc1JeL1BgabGJ14VfzRiX951V4gXwTH1vf5TjVwuwn2f1wQkdpSg5" |
+| transfers     | Yes       | Array that contains: `address` – string; `amount` – int64                                | array  | "amount": 10000000000, "address": "KicW5PKpT2FQb8YKzKfQu27reK6FDZdnAEZ3dUbAoMwc1JeL1BgabGJ14VfzRiX951V4gXwTH1vf5TjVwuwn2f1wQkdpSg5" |
 | fee           | Yes       | Transaction fee. This parameter should be specified in minimal available KRB units.      | uint64 | 10000000000                                                                                                                         |
 | unlockTime    | No        | Height of the block until which transaction is going to be locked for spending.          | uint64 | 0                                                                                                                                   |
 | anonymity     | Yes       | Privacy level (a discrete number from 1 to infinity). Level 6 and higher is recommended. | uint64 | 6                                                                                                                                   |
@@ -1388,8 +1385,3 @@ Output example:
    }
 }
 ```
-
-
-
-
-
