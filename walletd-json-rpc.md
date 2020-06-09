@@ -1063,7 +1063,7 @@ Output:
 | Argument       | Description                             | Format  | Example                                                                                         |
 |----------------|-----------------------------------------|---------|-------------------------------------------------------------------------------------------------|
 | address        | Parsed address.                         | string  | Kak1Nwr16RtJ5M4wLVM7bnAXSMgimsgxiQtoSTXSBUrsQHQ6CbLKeXwimHyn2iqorN2DqL2b4HcaiJLvPmRbUMVXJTLqbjT |
-| isvalid        | whether the address is valid or invalid | boolean | true                                                                                            |
+| isValid        | whether the address is valid or invalid | boolean | true                                                                                            |
 | spendPublicKey | Public spend key                        | string  | 17d068a5d62767661597779af63b7938f1e723052a2d0b8ed8fc6680cde3f88b                                |
 | viewPublicKey  | Public view key                         | string  | 32c547698847b6f9b04bc9035a8d97074d2c09bd8ef63f67b0941f30c8f39e9a                                |
 
@@ -1084,7 +1084,7 @@ Return value example:
    "jsonrpc": "2.0",
    "result": {
        "address": "Kak1Nwr16RtJ5M4wLVM7bnAXSMgimsgxiQtoSTXSBUrsQHQ6CbLKeXwimHyn2iqorN2DqL2b4HcaiJLvPmRbUMVXJTLqbjT",
-       "isvalid": true,
+       "isValid": true,
        "spendPublicKey": "17d068a5d62767661597779af63b7938f1e723052a2d0b8ed8fc6680cde3f88b",
        "viewPublicKey": "32c547698847b6f9b04bc9035a8d97074d2c09bd8ef63f67b0941f30c8f39e9a"
    }
