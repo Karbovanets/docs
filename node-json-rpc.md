@@ -688,6 +688,24 @@ sig_valid | whether signature is valid | boolean
 status | status of the request | string
 
 
+### resolveopenalias
+
+`resolveopenalias()` method allows to get address from alias DNS record. Node perfomrs DNS query and returns address if found.
+
+**Input**
+
+Argument     | Mandatory   | Description             | Format
+------------ | ----------- | ----------------------- | ------
+url          | yes         | OpenAlias domain name   | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+address  | found address correspoding to alias | string
+status | status of the request | string
+
+
 ## Examples
 
 ### getblockcount
@@ -2196,5 +2214,29 @@ Output:
       "sig_valid":true,
       "status":"OK"
    }
+}
+```
+
+### resolveopenalias
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "resolveopenalias",
+  "params": {
+   "url":"aiwe.karbo.me"
+  }
+}
+```
+Output:
+```
+{
+  "id": "test",
+  "jsonrpc": "2.0",
+  "result": {
+    "address": "KetKFqZu4jH9Gnbbvp5ckbXBzadeDK6EFPNFuPcZcCjMDK31r84weVzcF2BhewZEQGZUjDTB7QgHVbJoYTE89eh2ETuDdLH",
+    "status": "OK"
+  }
 }
 ```
