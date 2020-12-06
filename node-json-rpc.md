@@ -457,7 +457,7 @@ second | the signature | string
 
 ### gettransactionspool
 
-`gettransactionspool()` method the list of short details of transactions present in mempool.
+`gettransactionspool()` method returns the list of short details of transactions present in mempool.
 
 No Input
 
@@ -468,7 +468,7 @@ Argument | Description | Format
 status | status of the request | string
 transactions | array of transactions in mempool* | array
 
-\* empty array means that currently there are no transactions in mempool
+\* Empty array means that currently there are no transactions in mempool.
 
 Transactions entry attributes:
 
@@ -479,6 +479,40 @@ fee | the network fee of transaction | int
 amount_out | total amount in transaction | int
 size | the size of transaction | int
 receive_time | the timestamp when transaction was received by queried node | int
+
+
+### gettransactionsinpool
+
+`gettransactionsinpool()` method returns the list of transactions details that are in mempool. 
+
+No Input
+
+**Output**
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transactions | array of transactions in mempool* | array
+
+\* Empty array means that currently there are no transactions in mempool.
+
+See [gettransaction](#gettransaction) for attributes of `transactions`.
+
+
+### getrawtransactionspool
+
+`getrawtransactionspool()` method returns the list of transactions in mempool consisting of raw transactions with additional details and output indexes. 
+
+No Input
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transactions | array of transactions in mempool* | array
+
+\* Empty array means that currently there are no transactions in mempool.
+
+See [getrawtransactionsbyheights](#getrawtransactionsbyheights) for attributes of `transactions`.
 
 
 ### gettransactionsbypaymentid
@@ -543,8 +577,70 @@ Argument | Description | Format
 status | status of the request | string
 transactions | details of the transactions | array
 
-For transaction details attributes: see [gettransaction](#gettransaction)
+For `transactions` details attributes: see [gettransaction](#gettransaction)
 
+
+### gettransactionsbyheights
+
+`gettransactionsbyheights()` method returns details of the transactions from blocks by requested heights.
+
+**Input**
+
+Argument           | Mandatory     | Description             | Format
+------------------ | ------------- | ----------------------- | ------
+heights            | yes           | heights of blocks from which to serve transactions | array
+include_miner_txs  | no            | whether include coinbase transactions | bool
+exclude_signatures | no            | whether to exclude signatures of transactions | bool
+range              | no            | whether `heights` argument contains a list of blocks or a range (first and last height); if set to `true` transactions from all blocks in a rage are served | bool
+
+**Output**
+
+Argument     | Description | Format
+------------ | ---------- | --------
+status       | status of the request | string
+missed_txs   | list of hashes of missed transactions if any (unlikely to happen) | array
+transactions | details of the transactions | array
+
+For `transactions` details attributes: see [gettransaction](#gettransaction)
+
+
+### getrawtransactionsbyheights
+
+`getrawtransactionsbyheights()` method returns raw transactions with output global indexes from in blocks by requested heights.
+
+**Input**
+
+Argument           | Mandatory     | Description             | Format
+------------------ | ------------- | ----------------------- | ------
+heights            | yes           | heights of blocks from which to serve transactions | array
+include_miner_txs  | no            | whether include coinbase transactions | bool
+range              | no            | whether `heights` argument contains a list of blocks or a range (first and last height); if set to `true` transactions from all blocks in a rage are served | bool
+
+**Output**
+
+Argument     | Description | Format
+------------ | ---------- | --------
+status       | status of the request | string
+missed_txs   | list of hashes of missed transactions if any (unlikely to happen) | array
+transactions | list of raw transaction prefixes and corresponding output global indexes | array
+
+Each entry in `transactions` consists of:
+
+Argument       | Description | Format
+-------------- | ---------- | --------
+block_hash     | the hash of block containing transaction \* | string
+fee            | the network fee of transaction | int
+hash           | the hash of transaction | string
+height         | the height of block containing transaction \*\* | int
+output_indexes | the list of output global indexes | array
+timestamp      | the timestamp of block containing transaction \*\*\* | int
+transaction    | transaction prefix (transaction without signatures) | json object
+
+\* null hash if transaction is not in a block (is in mempool)
+
+\*\* invalid height if transaction is not in a block (is in mempool)
+
+\*\*\* node's receive time if transaction is not in a block (is in mempool)
 
 ### getcurrencyid
 
@@ -577,7 +673,7 @@ Argument | Description | Format
 -------- | ----------- | ------
 amount   | the amount received by destination address | int
 outputs  | outputs that belong to destination address | array
-status | status of the request | string
+status   | status of the request | string
 
 
 ### checktransactionproof
@@ -1512,6 +1608,202 @@ or
 ```
 
 
+### gettransactionsinpool
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "gettransactionsinpool",
+  "params": {
+  }
+}
+```
+Output:
+```
+{
+    "id": "test",
+    "jsonrpc": "2.0",
+    "result": {
+        "status": "OK",
+        "transactions": [
+            {
+                "blockHash": "0000000000000000000000000000000000000000000000000000000000000000",
+                "blockIndex": 0,
+                "extra": {
+                    "nonce": [],
+                    "publicKey": "983f8a711735dfbffdaf929c4e6f90eeaabb3d916d1b5439020037d82c105c98",
+                    "raw": "01983f8a711735dfbffdaf929c4e6f90eeaabb3d916d1b5439020037d82c105c98",
+                    "size": 33
+                },
+                "fee": 100000000000,
+                "hash": "be74a4f11c735331d49a64383005e7d8dfc5198eb44d2c484ffa09b05f291c13",
+                "inBlockchain": false,
+                "inputs": [
+                    {
+                        "data": {
+                            "input": {
+                                "amount": 10000,
+                                "k_image": "64cfbc84badc80b713462d88d7510d4cebbd62468b8b99db49fa4508ba9978b4",
+                                "key_offsets": [
+                                    29402,
+                                    28079,
+                                    14489
+                                ]
+                            },
+                            "mixin": 3,
+                            "outputs": [
+                                {
+                                    "number": 4,
+                                    "transactionHash": "c564e13e0e50c71dfafff9fcb5b51dc4b00f6c146635844d88594b9a01344417"
+                                },
+                                {
+                                    "number": 2,
+                                    "transactionHash": "d997f7824a4ce593caef7134a28192ed23cb90f483187f71b2308574424af748"
+                                },
+                                {
+                                    "number": 3,
+                                    "transactionHash": "ff8ec5acca5158e3c228f9b37479a243f2e8845d9fa3c4e454a9bdb7dcf099be"
+                                }
+                            ]
+                        },
+                        "type": "02"
+                    },
+                    ...
+                ],
+                "mixin": 3,
+                "outputs": [
+                    {
+                        "globalIndex": 0,
+                        "output": {
+                            "amount": 10000,
+                            "target": {
+                                "data": {
+                                    "key": "579b952e364f7c7b2007632173175ba4dcec0b15c2c26b8fbe2f361dc0fe5f60"
+                                },
+                                "type": "02"
+                            }
+                        }
+                    },
+                    ...
+                ],
+                "paymentId": "0000000000000000000000000000000000000000000000000000000000000000",
+                "signatures": [
+                    {
+                        "first": 0,
+                        "second": "daa3599557a78114df9197c30eb1561bde1233876a13567e89a43b8cfd85f405a70f6f294f27d9c47d481b525ed8ff2fce2da2bc7ebdd18a39ceb18c841eb606"
+                    },
+                    ...
+                    {
+                        "first": 2,
+                        "second": "fd728efd21f7eca453c05c7b618b05e57dddb4f2cd63ed2b08c0f0b69b16020a4b10016910e4fd616be3b4cd14be307a135b6e9fa13bab9ba777cc96a7108806"
+                    }
+                ],
+                "signaturesSize": 3,
+                "size": 981,
+                "timestamp": 1607253285,
+                "totalInputsAmount": 4000040010000,
+                "totalOutputsAmount": 3900040010000,
+                "unlockTime": 0,
+                "version": 1
+            },
+            ...
+        ]
+    }
+}
+```
+
+
+### getrawtransactionspool
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "getrawtransactionspool",
+  "params": {
+   
+  }
+}
+```
+Output:
+```
+{
+    "id": "test",
+    "jsonrpc": "2.0",
+    "result": {
+        "status": "OK",
+        "transactions": [
+            {
+                "block_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+                "fee": 100000000000,
+                "hash": "d22966b99f903e873b2bf8a95490da4b44c84a77218b0ed4092900fe38769168",
+                "height": 0,
+                "output_indexes": [],
+                "timestamp": 1607255955,
+                "transaction": {
+                    "extra": "01b42900844234fba05c082f9de4a56bfb8bc392bfb99a89fc38414d7dc07ccb5c",
+                    "unlock_time": 0,
+                    "version": 1,
+                    "vin": [
+                        {
+                            "type": "02",
+                            "value": {
+                                "amount": 500000000,
+                                "k_image": "9a1b9398882b915e26f57ccfe60a8de4999e2c28cf8815f55ee6dd9abf4271f1",
+                                "key_offsets": [
+                                    42528,
+                                    10598,
+                                    46592
+                                ]
+                            }
+                        },
+                        ...
+                        {
+                            "type": "02",
+                            "value": {
+                                "amount": 2000000000000,
+                                "k_image": "43586f1249710b4c271587bc85a60a2498dba901495bd3f98d6d212687a823e6",
+                                "key_offsets": [
+                                    132076,
+                                    17225,
+                                    234343
+                                ]
+                            }
+                        }
+                    ],
+                    "vout": [
+                        {
+                            "amount": 400,
+                            "target": {
+                                "data": {
+                                    "key": "756c488dc5bfd186f0e59c75c45e9d342b67ddb35d0ec017ade9ad89229b3baf"
+                                },
+                                "type": "02"
+                            }
+                        },
+                        ...
+                        {
+                            "amount": 2000000000000,
+                            "target": {
+                                "data": {
+                                    "key": "019c15ae6762c0ea0a45f840e8c0e53e5713162c6a11bb341f5111e2dd43474b"
+                                },
+                                "type": "02"
+                            }
+                        }
+                    ]
+                }
+            },
+            ...
+        ]
+    }
+}
+```
+
+
 ### gettransactionsbypaymentid
 
 Input:
@@ -1660,64 +1952,7 @@ Output:
                   },
                   "type":"02"
                },
-               {
-                  "data":{
-                     "input":{
-                        "amount":70000,
-                        "k_image":"0fde58f15f85702514dc73c11f76f4804995e48ff7a3e4132e3a9c26de71f894",
-                        "key_offsets":[
-                           25177,
-                           4837,
-                           16455
-                        ]
-                     },
-                     "mixin":3,
-                     "outputs":[
-                        {
-                           "number":3,
-                           "transactionHash":"7b6812f52141b949921611b1751d3fa970dd48a32c3f6df25d77838158e7fd6e"
-                        },
-                        {
-                           "number":2,
-                           "transactionHash":"62ad89ba56f7236346f072645482f9d3ac12c25162dd96a5c34dd71dd3fa046c"
-                        },
-                        {
-                           "number":3,
-                           "transactionHash":"e1d8bf45eab97166cfcdae45615e967cb2d7ef04a13921225edb135ebbde9332"
-                        }
-                     ]
-                  },
-                  "type":"02"
-               },
-               {
-                  "data":{
-                     "input":{
-                        "amount":6000000000000,
-                        "k_image":"c1bc732c470e87909449359dc6f1beb431c5bf4e87b6294f6b465a86a57323d6",
-                        "key_offsets":[
-                           100847,
-                           2958,
-                           21896
-                        ]
-                     },
-                     "mixin":3,
-                     "outputs":[
-                        {
-                           "number":13,
-                           "transactionHash":"4087f0fbaf3d6f388cfffb89024e846eb7bcd16a66a3fbb6c7dac9057f303219"
-                        },
-                        {
-                           "number":11,
-                           "transactionHash":"e4aa36188ef77f5b46a1f5caa6de20dd5b588b3e3f2cb777027aa3e7233f05e5"
-                        },
-                        {
-                           "number":12,
-                           "transactionHash":"4a43d417edbd78079bd133c5108e45557b915cff41a4d08e9b03fc1427278153"
-                        }
-                     ]
-                  },
-                  "type":"02"
-               }
+               ...
             ],
             "mixin":3,
             "outputs":[
@@ -1733,21 +1968,7 @@ Output:
                      }
                   }
                },
-               
                ...
-
-               {
-                  "globalIndex":201436,
-                  "output":{
-                     "amount":3000000000000,
-                     "target":{
-                        "data":{
-                           "key":"6f7faf1dbf245c561c79eb6e1b5aabd4304e06d879c28c8fafb0ffa08a602e8f"
-                        },
-                        "type":"02"
-                     }
-                  }
-               }
             ],
             "paymentId":"c536d820595b51fdc742ce173c0e6373d1ba3a4eca85f0bac5790030c5d76c91",
             "signatures":[
@@ -1771,226 +1992,201 @@ Output:
             "unlockTime":0,
             "version":1
          },
-         {
-            "blockHash":"99594aa44c83a261bfc408d563e2bc67dfc3e357691c8bb4b24dde072149d7d7",
-            "blockIndex":469381,
-            "extra":{
-               "nonce":[
-                  0,
-                  197,
-                  
-                  ...
-
-                  145
-               ],
-               "publicKey":"9e6286c03a8a96fcdf5e60fac543a8fe89705b24c734ffdbca895aebf9b49368",
-               "raw":"022100c536d820595b51fdc742ce173c0e6373d1ba3a4eca85f0bac5790030c5d76c91019e6286c03a8a96fcdf5e60fac543a8fe89705b24c734ffdbca895aebf9b49368",
-               "size":68
-            },
-            "fee":100000000000,
-            "hash":"a71285fcd8afc0d1de2271237294e795f2342b0080f6e79da6b58019427cdeb4",
-            "inBlockchain":true,
-            "inputs":[
-               {
-                  "data":{
-                     "input":{
-                        "amount":80000000000,
-                        "k_image":"7c505592f87c678a19de6d55695e1f9ca51eebca9f5fc1090ff492961e411c90",
-                        "key_offsets":[
-                           57363,
-                           48962,
-                           9654
-                        ]
-                     },
-                     "mixin":3,
-                     "outputs":[
-                        {
-                           "number":3,
-                           "transactionHash":"1b34655c1b6598988b1206dfd62dc42fbe61ab3003076a2c2994f90294c99069"
-                        },
-                        {
-                           "number":8,
-                           "transactionHash":"5c2b7ab136eb5051785be0fef8d421fb85a6eee24599a94673b992adf5339a86"
-                        },
-                        {
-                           "number":6,
-                           "transactionHash":"6a87c5f1c71e24f4a722b45c3c4971efd8f539ed7f243a47ec19beeda1abb6e6"
-                        }
-                     ]
-                  },
-                  "type":"02"
-               },
-               {
-                  "data":{
-                     "input":{
-                        "amount":2000000000,
-                        "k_image":"1f887b2d19c7c3896371c484bd7db755ac5d0b15139f30712646e8f93525f83a",
-                        "key_offsets":[
-                           56150,
-                           21092,
-                           22361
-                        ]
-                     },
-                     "mixin":3,
-                     "outputs":[
-                        {
-                           "number":2,
-                           "transactionHash":"aa4d0bc51b4a174dfbb6784fd9923762e290b578f7ed63ddf5f7f514e185ee3b"
-                        },
-                        {
-                           "number":8,
-                           "transactionHash":"2d157946f5ccb7e36e6e35d4873b3271a9c5de4c76787650ee01fcad5415939c"
-                        },
-                        {
-                           "number":8,
-                           "transactionHash":"e30747b1c95626b821f7ff9a914fab6af3b11fff34a719e6430095a3b85c64d4"
-                        }
-                     ]
-                  },
-                  "type":"02"
-               },
-               {
-                  "data":{
-                     "input":{
-                        "amount":50000,
-                        "k_image":"c736d6cd104baabb88781da7360cde367ec64fb366c1fe71e0057bcd9babeb10",
-                        "key_offsets":[
-                           31474,
-                           3302,
-                           13087
-                        ]
-                     },
-                     "mixin":3,
-                     "outputs":[
-                        {
-                           "number":1,
-                           "transactionHash":"eca2a57c52ce4f3a7b7e795b20eef10211306da199f65a89cf100b622e9fdfc5"
-                        },
-                        {
-                           "number":4,
-                           "transactionHash":"d367618fcec07a38c9790d850bf1b78b3a706bda3cb0eeac067ac2555748f059"
-                        },
-                        {
-                           "number":4,
-                           "transactionHash":"f750d925fef28077ade3cbcfd829256ffbb45f806d7c3d6fdf0e9fb1f6155cf0"
-                        }
-                     ]
-                  },
-                  "type":"02"
-               },
-               {
-                  "data":{
-                     "input":{
-                        "amount":1000000000000,
-                        "k_image":"4a802ba8a9a1776a5d4c966af3468c9858de835bcfd76baedc94752eb33e5c09",
-                        "key_offsets":[
-                           450585,
-                           265093,
-                           305164
-                        ]
-                     },
-                     "mixin":3,
-                     "outputs":[
-                        {
-                           "number":28,
-                           "transactionHash":"8b069352c1b011bdbfa3d15cbbe8c555693a0b981f42d67f12c7781e78fad903"
-                        },
-                        {
-                           "number":52,
-                           "transactionHash":"b77a1f4b74377c9b353c3a7b0db972a5f5447a01f8ac147155cd128b0493cd6c"
-                        },
-                        {
-                           "number":10,
-                           "transactionHash":"94c4f1517d3a416b13a82a1a598864616e137ae887de5d7422462753a7680eef"
-                        }
-                     ]
-                  },
-                  "type":"02"
-               },
-               {
-                  "data":{
-                     "input":{
-                        "amount":6000000000000,
-                        "k_image":"4c9f3fd03425c5027b599c024e5d35cb46ce4dd3ee4aad47f4417ebbeada1247",
-                        "key_offsets":[
-                           71875,
-                           20901,
-                           32218
-                        ]
-                     },
-                     "mixin":3,
-                     "outputs":[
-                        {
-                           "number":5,
-                           "transactionHash":"a2b15b4e6507df28222b44d316f46dcbf9fe8f5ca57ab73ee77646d1581e7e9a"
-                        },
-                        {
-                           "number":6,
-                           "transactionHash":"bf1d927763d34bd30e5e0d58eaa46292bce63832a12b55d02e1269f7db650c9d"
-                        },
-                        {
-                           "number":10,
-                           "transactionHash":"d81f46209a8d8db45fedb93b5bd51af3fdadbfc26cc1cb10c6a0c96bc2fadbae"
-                        }
-                     ]
-                  },
-                  "type":"02"
-               }
-            ],
-            "mixin":3,
-            "outputs":[
-               {
-                  "globalIndex":48133,
-                  "output":{
-                     "amount":50000,
-                     "target":{
-                        "data":{
-                           "key":"25bc53225e619945f947af8b912c822e617e21714c248b11658eba32e0cd5954"
-                        },
-                        "type":"02"
-                     }
-                  }
-               },
-               
-               ...
-
-               {
-                  "globalIndex":201465,
-                  "output":{
-                     "amount":3000000000000,
-                     "target":{
-                        "data":{
-                           "key":"4caeb6b3b5becae0d28eed651f02d70af72c811e0035494753ca8d35c9ef8bed"
-                        },
-                        "type":"02"
-                     }
-                  }
-               }
-            ],
-            "paymentId":"c536d820595b51fdc742ce173c0e6373d1ba3a4eca85f0bac5790030c5d76c91",
-            "signatures":[
-               {
-                  "first":0,
-                  "second":"e213c7baa1c04f4ee504e28f8abcb6c076b9140d56364c727cd043400268a60d0e4fc2a015b435eb4a7c6510bc602240b4f8a4004921872e98e985179865df06"
-               },
-               
-               ...
-
-               {
-                  "first":4,
-                  "second":"d6819e1538523552006d30a8aa05c48cbd93fb491ad8a09cc7efdb5a3a81360a440dc56c3b6cafc9e03288fe1e21178dd4a1cdf11b9b9062f6594ac1ad5c9e01"
-               }
-            ],
-            "signaturesSize":5,
-            "size":1541,
-            "timestamp":1585053091,
-            "totalInputsAmount":7082000050000,
-            "totalOutputsAmount":6982000050000,
-            "unlockTime":0,
-            "version":1
-         }
+         ...
       ]
    }
+}
+```
+
+
+### gettransactionsbyheights
+Input:
+```
+{
+    "jsonrpc": "2.0",
+    "id": 0,
+    "method": "gettransactionsbyheights",
+    "params": {
+        "heights": [
+            544404,
+            544406
+        ],
+        "include_miner_txs": false,
+        "exclude_signatures": true,
+        "range": true
+    }
+}
+```
+Output:
+```
+{
+    "id": 0,
+    "jsonrpc": "2.0",
+    "result": {
+        "missed_txs": [],
+        "status": "OK",
+        "transactions": [
+            {
+                "blockHash": "b83ebada751cd090496998a0fea7a45cd121d72db1f33746025e2b3a2243069c",
+                "blockIndex": 544404,
+                "extra": {
+                    "nonce": [],
+                    "publicKey": "9425a5c99043505b1d314d91a05f958821240c58f5e6b66b6b2cf5fe5ae1bd28",
+                    "raw": "019425a5c99043505b1d314d91a05f958821240c58f5e6b66b6b2cf5fe5ae1bd28",
+                    "size": 33
+                },
+                "fee": 100000000000,
+                "hash": "f95fd90c6e0da58bf6ee415b1267bb6e37ce972a286362ae3dced475f0c8ccac",
+                "inBlockchain": true,
+                "inputs": [
+                    {
+                        "data": {
+                            "input": {
+                                "amount": 2000000000,
+                                "k_image": "6dcfcc11b018ce42a775718f5ed98729d840ed3eb2a41dc6acd1334ba1008531",
+                                "key_offsets": [
+                                    35996,
+                                    48718,
+                                    6576,
+                                    13024,
+                                    557,
+                                    5926
+                                ]
+                            },
+                            "mixin": 6,
+                            "outputs": [
+                                {
+                                    "number": 2,
+                                    "transactionHash": "03d39a62a3e08d6ccbf13c175c9b32aade96e84e4c6aba29a52ab7c273dbdee3"
+                                },
+                                ...
+                                {
+                                    "number": 8,
+                                    "transactionHash": "887d5aac143f4964d5aa692956537681887e037aa5f2918a5811cfd2a1a3190c"
+                                }
+                            ]
+                        },
+                        "type": "02"
+                    },
+                    ...
+                ],
+                "mixin": 6,
+                "outputs": [
+                    {
+                        "globalIndex": 113863,
+                        "output": {
+                            "amount": 2000000000,
+                            "target": {
+                                "data": {
+                                    "key": "7bab078eead6c06f5ea4ce4e203811fea2492cc5150be976baf74a7a2c564fb5"
+                                },
+                                "type": "02"
+                            }
+                        }
+                    },
+                    ...
+                ],
+                "paymentId": "0000000000000000000000000000000000000000000000000000000000000000",
+                "signatures": [],
+                "signaturesSize": 0,
+                "size": 1187,
+                "timestamp": 0,
+                "totalInputsAmount": 4002000000000,
+                "totalOutputsAmount": 3902000000000,
+                "unlockTime": 0,
+                "version": 1
+            },
+            ...
+        ]
+    }
+}
+```
+
+
+### getrawtransactionsbyheights
+Input:
+```
+{
+    "jsonrpc": "2.0",
+    "id": 0,
+    "method": "getrawtransactionsbyheights",
+    "params": {
+        "heights": [
+            544404,
+            544406
+        ],
+        "include_miner_txs": false,
+        "range": true
+    }
+}
+```
+Output:
+```
+{
+    "id": 0,
+    "jsonrpc": "2.0",
+    "result": {
+        "missed_txs": [],
+        "status": "OK",
+        "transactions": [
+            {
+                "block_hash": "3de29c13b41dc89afc3566a040b41a4f5b566eaf73f4f4fc10faa5a482a89736",
+                "fee": 100000000000,
+                "hash": "03bfe202e4216603f9cf9f501d1b153f15256e23e9d2a8f6fe06904901ab278a",
+                "height": 544404,
+                "output_indexes": [
+                    57191,
+                    57629,
+                    68772,
+                    112691,
+                    60331,
+                    60723,
+                    60626,
+                    99123,
+                    113862,
+                    130215,
+                    193459
+                ],
+                "timestamp": 1603193189,
+                "transaction": {
+                    "extra": "019425a5c99043505b1d314d91a05f958821240c58f5e6b66b6b2cf5fe5ae1bd28",
+                    "unlock_time": 0,
+                    "version": 1,
+                    "vin": [
+                        {
+                            "type": "02",
+                            "value": {
+                                "amount": 2000000000,
+                                "k_image": "6dcfcc11b018ce42a775718f5ed98729d840ed3eb2a41dc6acd1334ba1008531",
+                                "key_offsets": [
+                                    35996,
+                                    48718,
+                                    6576,
+                                    13024,
+                                    557,
+                                    5926
+                                ]
+                            }
+                        },
+                        ...
+                    ],
+                    "vout": [
+                        {
+                            "amount": 2000000000,
+                            "target": {
+                                "data": {
+                                    "key": "7bab078eead6c06f5ea4ce4e203811fea2492cc5150be976baf74a7a2c564fb5"
+                                },
+                                "type": "02"
+                            }
+                        },
+                        ...
+                    ]
+                }
+            },
+            ...
+        ]
+    }
 }
 ```
 
