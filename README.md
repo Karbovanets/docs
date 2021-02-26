@@ -26,8 +26,9 @@
 
 
 ## Articles and Papers
-* [Whitepaper v. 1](/whitepaper.pdf)
-
+* [Karbo Whitepaper v. 1.0](/whitepaper.pdf)
+* [CryptoNote Whitepaper v 2.0](/cryptonote_whitepaper.pdf)
+* [Various KIPs (Karbo Imprmovement Proposals) and articles](https://github.com/Karbovanets/papers)
 
 \
 \
