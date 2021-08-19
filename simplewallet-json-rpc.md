@@ -7,6 +7,7 @@ Having done that you're ready to operate with the wallet through the following A
  http://95.46.98.64:32348/json_rpc
  http://localhost:32348/json_rpc
 
+
 ## Available commands ##
 
 * change_password
@@ -270,7 +271,6 @@ Output:
                 "blockIndex": 600103,
                 "confirmations": 3588,
                 "fee": 0,
-                "messages": [],
                 "output": false,
                 "paymentId": "",
                 "time": 1599044696,
