@@ -18,6 +18,7 @@ Having done that you're ready to operate with the wallet through the following A
 * get_payments
 * get_reserve_proof
 * get_transfers
+* get_last_transfers
 * get_transaction
 * get_tx_key
 * get_tx_proof
@@ -283,6 +284,29 @@ Output:
     }
 }
 ```
+
+
+### get_last_transfers
+
+Same as `get_transfers` except it returns no all transfers but last *n*. There is a `count` param to specify how many last transactions to fetch.
+
+URL: 
+```
+ /json_rpc
+```
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "get_last_transfers",
+  "params": {
+   "count":100
+  }
+}
+```
+
+Output is the same as in `get_transfers` method.
 
 
 ### get_transaction
