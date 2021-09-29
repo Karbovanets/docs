@@ -743,6 +743,34 @@ spent    | spent amount | int
 locked   | locked amount | int
 
 
+### checkpayment
+
+`checkpayment()` allows checking payment to given `address` by given `payment id`. It basically combines the functionality of several separate methods in a single convenience method. This method allows to do the payment in several transactions until the total received amount satisfies the requested one, i.e. it allows payment from several wallets, group payment etc.
+
+**Request**
+Argument        | Mandatory     | Description           | Format
+--------------- | ------------- | --------------------- | ------
+address         | yes | Receiving public address | string
+amount          | yes | Amount to be paid | int      
+payment_id      | yes | Unique Payment Id of the operation | string
+view_key        | yes | The *Private View Key* of the receiving address | string
+
+**Response**
+
+Argument         | Description          | Format
+---------------- | -------------------- | ------
+confirmations    | The number of network confirmations of the paying transaction(s) (largest in case of several transactions) | int
+received_amount  | The amount received in AU | int
+status | Status of payment | string
+transaction_hashes | Hashes of transactions with given Payment ID actually paying to provided address | array 
+
+`status` can be:
+- `paid`, 
+- `underpaid`, 
+- `pending`, 
+- `not_found`
+
+
 ### validateaddress
 
 `validateaddress()` methods allows to check if given public address is valid.
@@ -2354,6 +2382,36 @@ Output:
       "locked":0,
       "spent":0,
       "total":103143982017908
+   }
+}
+```
+
+
+### checkpayment
+Input:
+```
+{
+   "jsonrpc":"2.0",
+   "method":"checkpayment",
+   "params":{
+      "payment_id":"0bdde0dc45636835319012fe55a4823ee30df2fa84444f81e95f891c48987bdf", 
+      "view_key":"4ff203c944b6537ff160e328aaa3745a6e50c2bf608161f607b661452eebc5e1",
+      "address":"KaqCQAbx3BSKKv7ED98oQP9QSP3igqgo47hPYZ8q6KZyUY6GnDaQkh9WbVR4DxvmCq8mZcKPg3wfWFJQ5CsyrxPqKcXC3rx",
+      "amount": 100000000000000
+   }
+}
+```
+Output:
+```
+{
+   "jsonrpc": "2.0",
+   "result": {
+      "confirmations": 80077,
+      "received_amount": 1022227324533,
+      "status": "paid",
+      "transaction_hashes": [
+         "01c970533dcfe74f4cacce23997b52f88dda62277a2d720f701ee791f3fcc759"
+      ]
    }
 }
 ```
