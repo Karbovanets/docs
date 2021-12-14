@@ -12,6 +12,11 @@
 * [Light Wallet and Masternodes](light-wallet.md)
 * [Daemon command line arguments and commands](karbo-daemon.md)
 
+## Mining guides
+
+* [Solo mining](mining.md)
+
+
 ## Integration Guides
 
 * [Integration Guide](integration.md)
