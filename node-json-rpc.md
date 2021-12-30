@@ -748,6 +748,7 @@ locked   | locked amount | int
 `checkpayment()` allows checking payment to given `address` by given `payment id`. It basically combines the functionality of several separate methods in a single convenience method. This method allows to do the payment in several transactions until the total received amount satisfies the requested one, i.e. it allows payment from several wallets, group payment etc.
 
 **Request**
+
 Argument        | Mandatory     | Description           | Format
 --------------- | ------------- | --------------------- | ------
 address         | yes | Receiving public address | string
