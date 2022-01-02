@@ -33,14 +33,14 @@ notified with several green "SYNCHRONIZED OK" messages.
 After **karbowanecd** is launched you will have to wait until it is synchronized with 
 the network. You will be notified with several green "SYNCHRONIZED OK" messages. 
 Here are the most important daemon commands:
-
-* `start_mining <wallet_address> [threads=1]` Start mining in several threads to a given wallet address
+* `start_mining <SECRET_SPEND_KEY> <SECRET_VIEW_KEY> [threads=1]` Start mining in several threads to a given wallet
 * `stop_mining`					Stop mining
 * `show_hr`						Show current mining hashrate
 * `hide_hr`						Stop showing current mining hashrate
 * `help`						Show all daemon commands
 * `exit`						Exit karbowanecd
 
+Please refer to [Mining guide](mining.md) for more info.
 
 ## Wallet: send and receive payments
 
