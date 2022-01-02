@@ -42,11 +42,16 @@ To stop mining type `stop_mining`.
 
 ### Option 2: mining in daemon on startup
 
-If you run Karbo daemon with special startup flags it will start mining automatically upon finishing synchronization. These are `--mining-spend-key`, `--mining-view-key`, `--mining-threads`.
+If you run Karbo daemon with special startup flags it will start mining automatically upon finishing synchronization. These are: 
+
+* `--mining-spend-key` - secret spend key of mining wallet
+* `--mining-view-key` - secret view key  of mining wallet
+* `--mining-threads` - start mining in several threads
+* `--print-hashrate` - tells miner to show hashrate in console, by default it doesn't
 
 Example:
 ```
-./karbowanecd --mining-spend-key 1a0b4a1b42d234ddd57dadd34baa7b6e7d34d8be6a795bee0ab2215e7b3201b7 --mining-view-key bce354c4c6b5035b946e60acb116dbd038c2c2f3cb005a79c4dbe1af430e597a --mining-threads 2
+./karbowanecd --mining-spend-key 1a0b4a1b42d234ddd57dadd34baa7b6e7d34d8be6a795bee0ab2215e7b3201b7 --mining-view-key bce354c4c6b5035b946e60acb116dbd038c2c2f3cb005a79c4dbe1af430e597a --mining-threads 2 --print-hashrate
 ```
 
 ### Option 3: mining in daemon from simplewallet
