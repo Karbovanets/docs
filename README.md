@@ -28,7 +28,7 @@
 * [Karbo Node JSON RPC API](node-json-rpc.md)
 * [Karbo Simplewallet JSON RPC API](simplewallet-json-rpc.md)
 * [Karbo RPC Wallet JSON RPC API](walletd-json-rpc.md)
-
+* [Multisignature API](multisignature-api.md)
 
 ## Articles and Papers
 * [Karbo Whitepaper v. 1.0](/whitepaper.pdf)
@@ -46,4 +46,4 @@ The content is partially based on documentation that was originally written by t
 
 \
 \
-&copy; 2016-2019 Karbo Developers
+&copy; 2016-2022 Karbo Developers
