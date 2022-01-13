@@ -30,6 +30,8 @@ Having done that you're ready to operate with the wallet through the following A
 * transfer
 * validate_address
 * verify_message
+* estimate_fusion
+* send_fusion
 
 
 Please note, there is no "refresh" RPC method. RPC wallet refresh is performed automatically each 20 seconds.
@@ -671,3 +673,69 @@ Output:
         "good": true
     }
 }
+```
+
+
+### estimate_fusion
+
+Check if optimization is required.
+
+URL:
+```
+ /json_rpc
+```
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "estimate_fusion",
+  "params": {
+   "threshold":10000000000
+  }
+}
+```
+Output:
+```
+{
+    "id": "test",
+    "jsonrpc": "2.0",
+    "result": {
+        "fusion_ready_count": 21
+    }
+}
+```
+
+
+### send_fusion
+
+Send fusion (optimization) transaction. It is an aggregation of small amount outputs into fever larger amounts. Fusion transaction is sent without network fee.
+
+URL:
+```
+ /json_rpc
+```
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "send_fusion",
+  "params": {
+   "threshold":10000000000
+  }
+}
+```
+Output:
+```
+{
+    "id": "test",
+    "jsonrpc": "2.0",
+    "result": {
+        "tx_hash": "7f6215897c778248ba79fb415a5cfb2a5014097d01ef3de03d75a947821a31ca"
+    }
+}
+```
+Optional parameters:
+* mixin (default is 0)
+* unlock_time (default is 0)
