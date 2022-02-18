@@ -11,6 +11,7 @@
 
 * [Light Wallet and Masternodes](light-wallet.md)
 * [Daemon command line arguments and commands](karbo-daemon.md)
+* [How to run Karbo node behind reverse proxy](node-proxy.md)
 
 ## Mining guides
 
