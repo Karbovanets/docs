@@ -1,7 +1,7 @@
 
 # How to run Karbo node behind reverse proxy
 
-Here you will learn how to run Karbo node behing the reverse proxy for access in a browser via `https://` protocol, so it can be used as an API for various services, like client-side web wallet, explorer, etc.
+Here you will learn how to run Karbo node behind the reverse proxy for access in a browser via `https://` protocol, so it can be used as an API for various services, like client-side web wallet, explorer, etc.
 
 We will use nginx for this setup, which is probably the most popular solution. This example is for a VPS server on an Ubuntu. 
 
