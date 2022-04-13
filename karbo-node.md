@@ -127,7 +127,10 @@ systemctl start karbowanecd.service
 
 10. Check service status:
 ```
-karbo@karbonode.top:~/KARBO$ sudo systemctl status karbowanecd.service
+sudo systemctl status karbowanecd.service
+```
+You should see seomething like this:
+```
 ● karbowanecd.service - karbowanecd
    Loaded: loaded (/etc/systemd/system/karbowanecd.service; enabled; vendor preset: enabled)
    Active: active (running) since Sat 2020-10-17 19:24:47 CEST; 5s ago
@@ -136,13 +139,11 @@ karbo@karbonode.top:~/KARBO$ sudo systemctl status karbowanecd.service
     Tasks: 1 (limit: 4915)
    CGroup: /system.slice/karbowanecd.service
            └─5368 /home/karbo/KARBO/karbowanecd --data-dir=/home/karbo/KARBO/.karbowanec --log-file=/var/log/karbowanecd --restricted-rpc --
-
 Oct 17 19:24:47 karbonode.top systemd[1]: Started karbowanecd.
 lines 1-10/10 (END)
 ```
 
-And check your Karbo masternode from browser:  
-(don't forget to change server url to yours)
+And check your Karbo masternode from browser (don't forget to change server url to yours):
 - http://karbonode.top:32348/feeaddress
 - http://karbonode.top:32348/getinfo
 
@@ -181,10 +182,12 @@ and
   "white_peerlist_size": 268
 }
 ```
+respectively.
 
-You can connect to the node's output by `sudo conspy 20 #` if you install _conspy_.
+Also, you can connect to the node's output by `sudo conspy 20 #` if you install _conspy_.
 
 ## Update Karbo node
+
 1. Login to _karbo_ user, go to 'KARBO' folder: 
 ```
 su karbo
