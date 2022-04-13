@@ -5,6 +5,7 @@ On this page you will find description how to run karbowanecd with JSON PRC as L
 ## Create Linux service to start karbowanecd
 
 1. To start service we will use user _karbo_, so lets create it, manage permissions and login:
+
 ```
 useradd -m -s /bin/bash -G adm,systemd-journal,sudo karbo && passwd karbo
 groupadd karbo
@@ -13,6 +14,7 @@ su karbo
 ```
 
 2. Create directory _/KARBO/_ in home directory of _karbo_ user:
+
 ```
 cd ~
 mkdir KARBO
@@ -22,6 +24,7 @@ cd KARBO
 3. Download latest Linux version of Karbo and unpack it:
 
 This one is for Linux 18.04, if you have other version, find a corresponding release at https://github.com/seredat/karbowanec/releases/
+
 ```
 wget https://github.com/seredat/karbowanec/releases/download/v.1.7.6/Karbo-cli-ubuntu18.04-v.1.7.6.tar.gz
 tar -xvzf Karbo-cli-ubuntu18.04-v.1.7.6.tar.gz
@@ -29,6 +32,7 @@ rm Karbo-cli-ubuntu18.04-v.1.7.6.tar.gz
 ```
 
 4. Create log file and add permision to write it:
+
 ```
 sudo touch /var/log/karbowanecd
 sudo chgrp -R karbo /var/log/karbowanecd
@@ -36,6 +40,7 @@ sudo chmod -R 770 /var/log/karbowanecd
 ```
 
 5. Optionally you can pre-download blockchain bootstrap to speed-up process:
+
 ```
 cd KARBO
 mkdir .karbowanec
@@ -51,6 +56,7 @@ exit
 ```
 
 6. Add Karbo to firewall:
+
 ```
 apt-get install ufw -y
 ufw default allow outgoing
@@ -73,7 +79,8 @@ cd ~
 ```
 
 7. Lets check if everything is ok. Try to run daemon with _karbo_ user permission and wait for SYNCHRONIZED OK.
-Do not forget to change address to your wallet!
+
+o not forget to change address to your wallet!
 ```
 sudo -u karbo KARBO/karbowanecd --data-dir=KARBO/.karbowanec --log-file=/var/log/karbowanecd --restricted-rpc --enable-cors=* --enable-blockchain-indexes --rpc-bind-ip=0.0.0.0 --rpc-bind-port=32348 --fee-address=KixW1oDMYMyabY6CdwS13fQuUwmUeXTPThF9s9JfDggbXSQGnZXkrP9LvcJtV9x7qb2pLsSobkXWXCrPsGGeC1V6VPBhPva --fee-amount=0.1
 ```
@@ -89,11 +96,12 @@ Exit to `root`
 exit
 ```
 
-8. To autostart _karbowanecd_ daemon, we need to create service file in _/etc/systemd/system_:
+8. To autostart _karbowanecd_ daemon, we need to create service file in _/etc/systemd/system_
+
 ```
 sudo nano /etc/systemd/system/karbowanecd.service
 ```
-
+with such content:
 ```
 [Unit]
 Description=karbowanecd
@@ -119,6 +127,7 @@ WantedBy=multi-user.target
 **Do not forget to change address to your wallet!**
 
 9. Run service:
+
 ```
 systemctl daemon-reload
 systemctl enable karbowanecd.service
@@ -126,6 +135,7 @@ systemctl start karbowanecd.service
 ```
 
 10. Check service status:
+
 ```
 sudo systemctl status karbowanecd.service
 ```
@@ -188,7 +198,8 @@ Also, you can connect to the node's output by `sudo conspy 20 #` if you install 
 
 ## Update Karbo node
 
-1. Login to _karbo_ user, go to 'KARBO' folder: 
+1. Login to _karbo_ user, go to 'KARBO' folder:
+
 ```
 su karbo
 cd KARBO
