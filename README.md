@@ -33,8 +33,8 @@
 * [Multisignature API](multisignature-api.md)
 
 ## Articles and Papers
-* [Karbo Whitepaper v. 1.0](/whitepaper.pdf)
-* [CryptoNote Whitepaper v 2.0](/cryptonote_whitepaper.pdf)
+* [Karbo Whitepaper v. 1.0](https://github.com/Karbovanets/papers/blob/master/whitepaper.pdf)
+* [CryptoNote Whitepaper v 2.0](https://github.com/Karbovanets/papers/blob/master/cryptonote_whitepaper.pdf)
 * [Various KIPs (Karbo Imprmovement Proposals) and articles](https://github.com/Karbovanets/papers)
 
 \
