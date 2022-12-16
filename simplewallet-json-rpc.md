@@ -8,7 +8,7 @@ Having done that you're ready to operate with the wallet through the following A
  http://localhost:32348/json_rpc
 
 
-*Note.* It is also possible to run JSON RPC API server in GUI Wallet Classic. To do so, in the menu select "Wallet RPC interface" and check "Run Wallet RPC interface". There you can set URL and port where wallet should listen, as well as set authorisation if needed.
+**Note.** It is also possible to run JSON RPC API server in GUI Wallet Classic. To do so, in the menu select "Wallet RPC interface" and check "Run Wallet RPC interface". Also, there you can set URL and port where wallet should listen, as well as authorisation if needed.
 
 ## Available commands ##
 
