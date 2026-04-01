@@ -5,7 +5,7 @@ Here you will learn how to run Karbo node behind the reverse proxy for access in
 
 We will use nginx for this setup, which is probably the most popular solution. This example is for a VPS server on an Ubuntu. 
 
-You will need a domain and a SSL certificate, you can use a free certificate from Letsencrypt and Cerfbot. We will omit the instructions on how to get certificates and assume you have them.
+You will need a domain and a SSL certificate, you can use a free certificate from Letsencrypt and Certbot. We will omit the instructions on how to get certificates and assume you have them.
 
 ## Run Karbo daemon
 
@@ -55,30 +55,28 @@ server {
 }
 
 server {
-    listen 32448;
-    server_name node.karbo.org;
+	listen 32448 ssl;
 
-    ssl_certificate           /etc/nginx/cert.crt;
-    ssl_certificate_key       /etc/nginx/cert.key;
+	ssl_certificate /etc/letsencrypt/live/node.karbo.org/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/node.karbo.org/privkey.pem;
 
-    ssl on;
-    ssl_session_cache  builtin:1000  shared:SSL:10m;
-    ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;
-    ssl_ciphers HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4;
-    ssl_prefer_server_ciphers on;
+	server_name node.karbo.org;
 
-    access_log            /var/log/nginx/node.karbo.org.log;
+	ssl_session_cache  builtin:1000  shared:SSL:10m;
+	ssl_protocols  TLSv1.2 TLSv1.3;
+	ssl_ciphers HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4;
+	ssl_prefer_server_ciphers on;
 
-    location / {
+	access_log /var/log/nginx/node.karbo.org.log;
 
-      proxy_set_header        Host $host;
-      proxy_set_header        X-Real-IP $remote_addr;
-      proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header        X-Forwarded-Proto $scheme;
-
-      proxy_pass          http://0.0.0.0:32348;
-      proxy_read_timeout  90;
-    }
+	location / {
+		proxy_set_header        Host $host;
+		proxy_set_header        X-Real-IP $remote_addr;
+		proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header        X-Forwarded-Proto $scheme;
+		proxy_pass          http://0.0.0.0:32348;
+		proxy_read_timeout  90;
+	}
 }
 ```
 
