@@ -30,8 +30,9 @@ Having done that you're ready to operate with the wallet through the following A
 * transfer
 * validate_address
 * verify_message
-* estimate_fusion
-* send_fusion
+* resolve_account_number
+* get_account_number
+* register_account
 
 
 Please note, there is no "refresh" RPC method. RPC wallet refresh is performed automatically each 20 seconds.
@@ -676,40 +677,9 @@ Output:
 ```
 
 
-### estimate_fusion
+### resolve_account_number
 
-Check if optimization is required.
-
-URL:
-```
- /json_rpc
-```
-Input:
-```
-{
-  "jsonrpc": "2.0",
-  "id": "test",
-  "method": "estimate_fusion",
-  "params": {
-   "threshold":10000000000
-  }
-}
-```
-Output:
-```
-{
-    "id": "test",
-    "jsonrpc": "2.0",
-    "result": {
-        "fusion_ready_count": 21
-    }
-}
-```
-
-
-### send_fusion
-
-Send fusion (optimization) transaction. It is an aggregation of small amount outputs into fever larger amounts. Fusion transaction is sent without network fee.
+Get address for account number.
 
 URL:
 ```
@@ -720,9 +690,9 @@ Input:
 {
   "jsonrpc": "2.0",
   "id": "test",
-  "method": "send_fusion",
+  "method": "resolve_account_number",
   "params": {
-   "threshold":10000000000
+   "account_number":"1264265-1-W"
   }
 }
 ```
@@ -732,10 +702,66 @@ Output:
     "id": "test",
     "jsonrpc": "2.0",
     "result": {
-        "tx_hash": "7f6215897c778248ba79fb415a5cfb2a5014097d01ef3de03d75a947821a31ca"
+        "address": "KeoXXpoXrGB3tk6jUPardpKXwGUNsriDAMMNzxKoz6X1JZZ1xRH2kCBZxqMerZiqeRd6fWFyFcBhcfPyerTugWXFPh74s5k",
+        "status": "OK"
     }
 }
 ```
-Optional parameters:
-* mixin (default is 0)
-* unlock_time (default is 0)
+
+
+### get_account_number
+
+Lookup account number for wallet's address.
+
+URL:
+```
+ /json_rpc
+```
+Input:
+```
+{
+ 	"jsonrpc":"2.0",
+ 	"method":"get_account_number",
+ 	"params":{
+ 	}
+}
+```
+Output:
+```
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "account_number": "1264265-1-W",
+        "status": "OK"
+    }
+}
+```
+
+
+### register_account
+
+Self-send transaction to register account number for wallet on chain. Needs available balance for minimal nerwork fee and some inputs to self-sent not less than dust threshold.
+
+URL:
+```
+ /json_rpc
+```
+Input:
+```
+{
+ 	"jsonrpc":"2.0",
+ 	"method":"register_account",
+ 	"params":{
+ 	}
+}
+```
+Output:
+```
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "tx_hash": "60eb029589f7fdc82118338e7513fae3bef198fd1fe3223e8506b11148858f2e",
+        "tx_key": "30a48e4cbf02e00e74568fbbb57ddb749671b5b651ef8714869e568f2ba03404"
+    }
+}
+```
