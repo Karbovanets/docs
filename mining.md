@@ -59,3 +59,14 @@ Example:
 You can also run solo mining from `simplewallet`.
 
 First, run daemon and make sure it is synchronized. Then in another terminal run `simplewallet`, generate new or open existing wallet and enter command `start_mining [<number_of_threads>]`. The daemon will start mining to this wallet.
+
+
+### Affinity
+
+On Windows it is advisable to set the CPU affinity for daemon, which should boost mining speed significantly:
+
+1. Open Task Manager.
+2. Click “More details”.
+3. Right-click the `karbowanecd` and click “Go to details”.
+4. Right-click the `karbowanecd` in the “Details” window and choose “Set affinity”.
+5. Select the cores you want to assign to the program. We recommend assigning only physical cores (even numbers, e.g. 0, 2, 4, 6...).
