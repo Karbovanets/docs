@@ -43,6 +43,29 @@ Argument         | Description          | Format
 count            | Current chain height | int
 status           | Status of request    | string
 
+**Example**
+
+Input:
+```
+{
+	"jsonrpc": "2.0",
+	"id": "test",
+	"method": "getblockcount",
+	"params": {}
+}
+```
+Output: 
+```
+ {
+ 	"id": "test",
+ 	"jsonrpc": "2.0",
+ 	"result": {
+ 		"count": 123456,
+ 		"status": "OK"
+ 	}
+ }
+```
+
 
 ### getblockslist
 
@@ -71,6 +94,54 @@ cumulative_size  | Total size of the block | int
 difficulty       | Block's difficulty | int
 min_fee          | Minimal transaction fee at the height of the block | int
 
+**Example**
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "getblockslist",
+  "params": {
+    "height": 100000,
+    "count": 10
+  }
+}
+```
+Output: 
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "blocks":[
+         {
+            "cumulative_size":405,
+            "difficulty":18484080,
+            "hash":"f9940a120ca47d23e014078d7bbfd59f6ce4f20831a4e011b02ff73fcf0372da",
+            "height":100000,
+            "min_fee":100000000000,
+            "timestamp":1492672031,
+            "transactions_count":1
+         },
+
+         ...
+
+         {
+            "cumulative_size":405,
+            "difficulty":24697711,
+            "hash":"8f345a2656da4fd1da0c09193ea177af3ac69ea20f1d5090fbc507cc196ed2d6",
+            "height":99990,
+            "min_fee":100000000000,
+            "timestamp":1492668959,
+            "transactions_count":1
+         }
+      ],
+      "status":"OK"
+   }
+}
+```
+
 
 ### getaltblockslist
 
@@ -85,6 +156,41 @@ Argument         | Description          | Format
 alt_blocks       | The list of block short info | array
 
 Alt. block short response attributes: see [getblockslist](#getblockslist).
+
+
+**Example**
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "getaltblockslist",
+  "params": {
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "alt_blocks":[
+         {
+            "cumulative_size":405,
+            "difficulty":13913696485,
+            "hash":"2d7cc8c350e1152a9a9178638c09e8c02362c9a19cfe51a3a3722b8a95588afd",
+            "height":490523,
+            "min_fee":100000000000,
+            "timestamp":1590163198,
+            "transactions_count":1
+         }
+      ],
+      "status":"OK"
+   }
+}
+```
 
 
 ### getblockhash
@@ -102,6 +208,28 @@ height          | Yes           | The height of the block whose previous hash is
 Argument         | Description          | Format
 ---------------- | -------------------- | ------
 result           | Hash of previous block | int
+
+**Example**
+
+Input:
+```
+ {
+ 	"jsonrpc": "2.0",
+ 	"id": "test",
+ 	"method": "getblockhash",
+ 	"params": {
+ 		"height": 123456
+ 	}
+ }
+```
+Output:
+```
+ {
+ 	"id": "test",
+ 	"jsonrpc": "2.0",
+ 	"result": "a7428..."
+ }
+```
 
 
 ### getblocktemplate
@@ -125,6 +253,35 @@ height | Chain height of the network | int
 reserved_offset | Offset reserved | int
 status | Status of the network | string
 
+**Example**
+
+Input:
+```
+ {
+ 	"jsonrpc": "2.0",
+ 	"id" : "test",
+ 	"method": "getblocktemplate",
+ 	"params": {
+ 		"reserve_size": 200,
+ 		"wallet_address": "28j5g2Hbe1..."
+ 	}
+ }
+```
+Output:
+```
+ {
+ 	"id": "test",
+ 	"jsonrpc": "2.0",
+ 	"result": {
+ 		"blocktemplate_blob": "0100de...",
+ 		"difficulty": 65563,
+ 		"height": 123456,
+ 		"reserved_offset": 395,
+ 		"status": ""
+ 	}
+ }
+```
+
 
 ### submitblock
 
@@ -141,6 +298,28 @@ block_blob | Yes | Block blob of the mined block | string
 Argument         | Description          | Format
 ---------------- | -------------------- | ------
 status           | Status of request    | string
+
+**Example**
+
+Input: 
+```
+ {
+ 	"jsonrpc": "2.0",
+ 	"id" : "test",
+ 	"method": "submitblock",
+ 	"params": ["0100b...."]
+ }
+```
+Output:
+```
+ {
+ 	"id": "test",
+ 	"jsonrpc": "2.0",
+ 	"result": {
+ 		"status" : "OK"
+ 	}
+ }
+```
 
 
 ### getlastblockheader
@@ -167,6 +346,40 @@ prev_hash | hash of the previous block | string
 reward | reward of the block | str
 timestamp | the time at which the block is occured on chain since Unix epoch | int
 status | status of the request | string
+
+**Example**
+
+Input:
+```
+ {
+ 	"jsonrpc": "2.0",
+ 	"id" : "test",
+ 	"method": "getlastblockheader"
+ }
+```
+Output:
+```
+ {
+ 	"id": "test",
+ 	"jsonrpc": "2.0",
+ 	"result": {
+ 		"block_header": {
+ 			"depth": 1,
+ 			"difficulty": 65198,
+ 			"hash": "9a8be83...",
+ 			"height": 123456,
+ 			"major_version": 1,
+ 			"minor_version": 0,
+ 			"nonce": 2358499061,
+ 			"orphan_status": false,
+ 			"prev_hash": "dde56b7e...",
+ 			"reward": 44090506423186,
+ 			"timestamp": 1356589561
+ 		},
+ 		"status": "OK"
+ 	}
+ }
+```
 
 
 ### getblockheaderbyhash
@@ -198,6 +411,43 @@ reward | reward of the block | str
 timestamp | the time at which the block is occured on chain since Unix epoch | int
 status | status of the request | string
 
+**Example**
+
+Input:
+```
+ {
+ 	"jsonrpc": "2.0",
+ 	"id" : "test",
+ 	"method": "getblockheaderbyhash",
+ 	"params": {
+ 		"hash" : "9a8be8..."
+ 	}
+ }
+```
+Output:
+```
+ {
+ 	"id": "test",
+ 	"jsonrpc": "2.0",
+ 	"result": {
+ 		"block_header": {
+ 			"depth": 1,
+ 			"difficulty": 65198,
+ 			"hash": "9a8be83...",
+ 			"height": 123456,
+ 			"major_version": 1,
+ 			"minor_version": 0,
+ 			"nonce": 2358499061,
+ 			"orphan_status": false,
+ 			"prev_hash": "dde56b7e...",
+ 			"reward": 44090506423186,
+  			"timestamp": 1356589561
+ 		},
+ 		"status": "OK"
+ 	}
+ }
+```
+
 
 ### getblockheaderbyheight
 
@@ -227,6 +477,43 @@ prev_hash | hash of the previous block | string
 reward | reward of the block | str
 timestamp | the time at which the block is occured on chain since Unix epoch | int
 status | status of the request | string
+
+**Example**
+
+Input:
+```
+ {
+ 	"jsonrpc": "2.0",
+ 	"id" : "test",
+ 	"method": "getblockheaderbyheight",
+ 	"params": {
+ 		"height" : 123456
+ 	}
+ }
+```
+Output:
+```
+ {
+ 	"id": "test",
+ 	"jsonrpc": "2.0",
+ 	"result": {
+ 		"block_header": {
+ 			"depth": 1,
+ 			"difficulty": 65198,
+  			"hash": "9a8be83...",
+ 			"height": 123456,
+ 			"major_version": 1,
+ 			"minor_version": 0,
+ 			"nonce": 2358499061,
+ 			"orphan_status": false,
+ 			"prev_hash": "dde56b7e...",
+ 			"reward": 44090506423186,
+ 			"timestamp": 1356589561
+ 			},
+ 		"status": "OK"
+ 	}
+ }
+```
 
 
 ### getblockbyheight
@@ -269,6 +556,85 @@ status | status of the request | string
 
 Transaction Attributes: see [gettransaction](#gettransaction)
 
+**Example**
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "method": "getblockbyheight",
+  "id": "test",
+  "params": {
+	"blockHeight": 399666 
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "block":{
+         "alreadyGeneratedCoins":7822291504630269000,
+         "alreadyGeneratedTransactions":842837,
+         "baseReward":8307330332565,
+         "blockSize":23716,
+         "cumulativeDifficulty":2277860049927920,
+         "depth":5,
+         "difficulty":14377384679,
+         "effectiveSizeMedian":1000000,
+         "hash":"4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde",
+         "index":399666,
+         "isOrphaned":false,
+         "majorVersion":4,
+         "minorVersion":0,
+         "nonce":3653353692,
+         "penalty":0,
+         "prevBlockHash":"72199371e92ee3dd95f0993f49a82d3dc7b7175dc004ad9c4437167a7138bd13",
+         "reward":8507330332565,
+         "sizeMedian":532,
+         "timestamp":1568118204,
+         "totalFeeAmount":200000000000,
+         "transactions":[
+            {
+               "blockHash":"4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde",
+               "blockIndex":399666,
+               "extra":{
+                  ...
+               },
+               "fee":0,
+               "hash":"33688742d5e0e84da4cd195d9b6970ce539590b152d6e9095d6837f26defcf74",
+               "inBlockchain":true,
+               "inputs":[
+
+               ],
+               "mixin":0,
+               "outputs":[
+
+               ],
+               "paymentId":"0000000000000000000000000000000000000000000000000000000000000000",
+               "signatures":[
+                  ...
+               ],
+               "signaturesSize":0,
+               "size":500,
+               "timestamp":1568118204,
+               "totalInputsAmount":0,
+               "totalOutputsAmount":8507330332565,
+               "unlockTime":399676
+            },
+            {
+               ...
+            }
+         ],
+         "transactionsCumulativeSize":23640
+      },
+      "status":"OK"
+   }
+}
+```
+
 
 ### getblockbyhash
 
@@ -283,6 +649,61 @@ hash            | Yes           | hash of the block     | string
 **Output**
 
 see [getblockbyheight](#getblockbyheight)
+
+**Example**
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "method": "getblockbyhash",
+  "id": "test",
+  "params": {
+	"hash": "4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde" 
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "block":{
+         "alreadyGeneratedCoins":7822291504630269000,
+         "alreadyGeneratedTransactions":842837,
+         "baseReward":8307330332565,
+         "blockSize":23716,
+         "cumulativeDifficulty":2277860049927920,
+         "depth":6,
+         "difficulty":14377384679,
+         "effectiveSizeMedian":1000000,
+         "hash":"4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde",
+         "index":399666,
+         "isOrphaned":false,
+         "majorVersion":4,
+         "minorVersion":0,
+         "nonce":3653353692,
+         "penalty":0,
+         "prevBlockHash":"72199371e92ee3dd95f0993f49a82d3dc7b7175dc004ad9c4437167a7138bd13",
+         "reward":8507330332565,
+         "sizeMedian":532,
+         "timestamp":1568118204,
+         "totalFeeAmount":200000000000,
+         "transactions":[
+            {
+               ...
+            },
+            {
+               ...
+            }
+         ],
+         "transactionsCumulativeSize":23640
+      },
+      "status":"OK"
+   }
+}
+```
 
 
 ### getblocksbyheights
@@ -302,6 +723,59 @@ Argument | Description | Format
 blocks | vector of block details where each block has the same output format as single block details in [getblockbyheight](#getblockbyheight) or [getblockbyhash](#getblockbyhash) methods | -
 status | status of the request | string
 
+**Example**
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "method": "getblocksbyheights",
+  "id": "test",
+  "params": {
+	"blockHeights": [399666, 399667] 
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "blocks":[
+         {
+            "alreadyGeneratedCoins":7822291504630269000,
+            "alreadyGeneratedTransactions":842837,
+            "baseReward":8307330332565,
+            "blockSize":23716,
+            "cumulativeDifficulty":2277860049927920,
+            "depth":6,
+            "difficulty":14377384679,
+            "effectiveSizeMedian":1000000,
+            "hash":"4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde",
+            "index":399666,
+            "isOrphaned":false,
+            "majorVersion":4,
+            "minorVersion":0,
+            "nonce":3653353692,
+            "penalty":0,
+            "prevBlockHash":"72199371e92ee3dd95f0993f49a82d3dc7b7175dc004ad9c4437167a7138bd13",
+            "reward":8507330332565,
+            "sizeMedian":532,
+            "timestamp":1568118204,
+            "totalFeeAmount":200000000000,
+            "transactions":[ ... ],
+            "transactionsCumulativeSize":23640
+         },
+         {
+            ...
+         }
+      ],
+      "status":"OK"
+   }
+}
+```
+
 
 ### getblocksbyhashes
 
@@ -320,6 +794,62 @@ Argument | Description | Format
 blocks | vector of block details where each block has the same output format as single block details in [getblockbyheight](#getblockbyheight) or [getblockbyhash](#getblockbyhash) methods | -
 status | status of the request | string
 
+**Example**
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "method": "getblocksbyhashes",
+  "id": "test",
+  "params": {
+	"blockHashes": [
+    	"4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde",
+        "72199371e92ee3dd95f0993f49a82d3dc7b7175dc004ad9c4437167a7138bd13"
+     ] 
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "blocks":[
+         {
+            "alreadyGeneratedCoins":7822291504630269000,
+            "alreadyGeneratedTransactions":842837,
+            "baseReward":8307330332565,
+            "blockSize":23716,
+            "cumulativeDifficulty":2277860049927920,
+            "depth":11,
+            "difficulty":14377384679,
+            "effectiveSizeMedian":1000000,
+            "hash":"4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde",
+            "index":399666,
+            "isOrphaned":false,
+            "majorVersion":4,
+            "minorVersion":0,
+            "nonce":3653353692,
+            "penalty":0,
+            "prevBlockHash":"72199371e92ee3dd95f0993f49a82d3dc7b7175dc004ad9c4437167a7138bd13",
+            "reward":8507330332565,
+            "sizeMedian":532,
+            "timestamp":1568118204,
+            "totalFeeAmount":200000000000,
+            "transactions":[ ... ],
+            "transactionsCumulativeSize":23640
+         },
+         {
+            ...
+         }
+      ],
+      "status":"OK"
+   }
+}
+```
+
 
 ### getblocktimestamp
 
@@ -335,6 +865,31 @@ Argument | Description | Format
 ------- | ---------- | --------
 timestamp | timestamp of the block | int
 status | status of the request | string
+
+**Example**
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "getblocktimestamp",
+  "params": {
+    "height":10000
+  }
+}
+```
+Output:
+```
+{
+   "id":"test",
+   "jsonrpc":"2.0",
+   "result":{
+      "status":"OK",
+      "timestamp":1467193202
+   }
+}
+```
 
 
 ### gettransaction
@@ -454,976 +1009,8 @@ Argument | Description | Format
 first | the number of signature which repeats as many times as transacion mixin count (signature for each input in mixin) | int
 second | the signature | string
 
+**Example**
 
-### gettransactionspool
-
-`gettransactionspool()` method returns the list of short details of transactions present in mempool.
-
-No Input
-
-**Output**
-
-Argument | Description | Format
-------- | ---------- | --------
-status | status of the request | string
-transactions | array of transactions in mempool* | array
-
-\* Empty array means that currently there are no transactions in mempool.
-
-Transactions entry attributes:
-
-Argument | Description | Format
-------- | ---------- | --------
-hash | the hash of transaction | string
-fee | the network fee of transaction | int
-amount_out | total amount in transaction | int
-size | the size of transaction | int
-receive_time | the timestamp when transaction was received by queried node | int
-
-
-### gettransactionsinpool
-
-`gettransactionsinpool()` method returns the list of transactions details that are in mempool. 
-
-No Input
-
-**Output**
-
-Argument | Description | Format
-------- | ---------- | --------
-status | status of the request | string
-transactions | array of transactions in mempool* | array
-
-\* Empty array means that currently there are no transactions in mempool.
-
-See [gettransaction](#gettransaction) for attributes of `transactions`.
-
-
-### getrawtransactionspool
-
-`getrawtransactionspool()` method returns the list of transactions in mempool consisting of raw transactions with additional details and output indexes. 
-
-No Input
-
-Argument | Description | Format
-------- | ---------- | --------
-status | status of the request | string
-transactions | array of transactions in mempool* | array
-
-\* Empty array means that currently there are no transactions in mempool.
-
-See [getrawtransactionsbyheights](#getrawtransactionsbyheights) for attributes of `transactions`.
-
-
-### gettransactionsbypaymentid
-
-`gettransactionsbypaymentid()` methid returns an array of short data of trandactions containing given Payment ID.
-
-**Input**
-
-Argument        | Mandatory     | Description             | Format
---------------- | ------------- | ----------------------- | ------
-payment_id      | Yes           | Payment ID              | string
-
-**Output**
-
-Argument | Description | Format
-------- | ---------- | --------
-status | status of the request | string
-transactions | short details of the transactions, see below | array
-
-Short details of the transaction:
-
-Argument | Description | Format
-------- | ---------- | --------
-hash | the hash of transaction | string
-fee | the network fee of transaction | int
-amount_out | total amount in transaction | int
-size | the size of transaction | int
-
-
-### gettransactionhashesbypaymentid
-
-`gettransactionhashesbypaymentid()` method returns hashes of transactions containing given Payment ID.
-
-**Input**
-
-Argument        | Mandatory     | Description             | Format
---------------- | ------------- | ----------------------- | ------
-paymentId       | Yes           | Payment ID              | string
-
-**Output**
-
-Argument | Description | Format
-------- | ---------- | --------
-status | status of the request | string
-transactionHashes | hashes of transactions | array
-
-
-### gettransactionsbyhashes
-
-`gettransactionsbyhashes()` method returns details of the transactions found by given hashes.
-
-**Input**
-
-Argument          | Mandatory     | Description             | Format
------------------ | ------------- | ----------------------- | ------
-transactionHashes | Yes           | hashes of the transactions to find | array
-
-**Output**
-
-Argument | Description | Format
-------- | ---------- | --------
-status | status of the request | string
-transactions | details of the transactions | array
-
-For `transactions` details attributes: see [gettransaction](#gettransaction)
-
-
-### gettransactionsbyheights
-
-`gettransactionsbyheights()` method returns details of the transactions from blocks by requested heights.
-
-**Input**
-
-Argument           | Mandatory     | Description             | Format
------------------- | ------------- | ----------------------- | ------
-heights            | yes           | heights of blocks from which to serve transactions | array
-include_miner_txs  | no            | whether include coinbase transactions | bool
-exclude_signatures | no            | whether to exclude signatures of transactions | bool
-range              | no            | whether `heights` argument contains a list of blocks or a range (first and last height); if set to `true` transactions from all blocks in a rage are served | bool
-
-**Output**
-
-Argument     | Description | Format
------------- | ---------- | --------
-status       | status of the request | string
-missed_txs   | list of hashes of missed transactions if any (unlikely to happen) | array
-transactions | details of the transactions | array
-
-For `transactions` details attributes: see [gettransaction](#gettransaction)
-
-
-### getrawtransactionsbyheights
-
-`getrawtransactionsbyheights()` method returns raw transactions with output global indexes from in blocks by requested heights.
-
-**Input**
-
-Argument           | Mandatory     | Description             | Format
------------------- | ------------- | ----------------------- | ------
-heights            | yes           | heights of blocks from which to serve transactions | array
-include_miner_txs  | no            | whether include coinbase transactions | bool
-range              | no            | whether `heights` argument contains a list of blocks or a range (first and last height); if set to `true` transactions from all blocks in a rage are served | bool
-
-**Output**
-
-Argument     | Description | Format
------------- | ---------- | --------
-status       | status of the request | string
-missed_txs   | list of hashes of missed transactions if any (unlikely to happen) | array
-transactions | list of raw transaction prefixes and corresponding output global indexes | array
-
-Each entry in `transactions` consists of:
-
-Argument       | Description | Format
--------------- | ---------- | --------
-block_hash     | the hash of block containing transaction \* | string
-fee            | the network fee of transaction | int
-hash           | the hash of transaction | string
-height         | the height of block containing transaction \*\* | int
-output_indexes | the list of output global indexes | array
-timestamp      | the timestamp of block containing transaction \*\*\* | int
-transaction    | transaction prefix (transaction without signatures) | json object
-
-\* null hash if transaction is not in a block (is in mempool)
-
-\*\* invalid height if transaction is not in a block (is in mempool)
-
-\*\*\* node's receive time if transaction is not in a block (is in mempool)
-
-### getcurrencyid
-
-`getcurrencyid()` method returns unique currency identifier.
-
-No Input
-
-**Output**
-
-Argument | Description | Format
--------- | ----------- | ------
-currency_id_blob | unique currency identifier | string
-
-
-### checktransactionkey
-
-`checktransactionkey()` method allows to check payment by `Private Transaction Key`.
-
-**Input**
-
-Argument          | Mandatory  | Description             | Format
------------------ | ---------- | ----------------------- | ------
-transaction_id    | yes        | the hash of transaction | string
-transaction_key   | yes        | Private Transaction Key | string 
-address           | yes        | the destination public address | string
-
-**Output**
-
-Argument | Description | Format
--------- | ----------- | ------
-amount   | the amount received by destination address | int
-outputs  | outputs that belong to destination address | array
-status   | status of the request | string
-
-
-### checktransactionproof
-
-`checktransactionproof()` allows to check payment by special Transaction Proof without revealing `Private Transaction Key` by sender.
-
-**Input**
-
-Argument            | Mandatory  | Description             | Format
-------------------- | ---------- | ----------------------- | ------
-transaction_id      | yes        | the hash of transaction | string
-signature           | yes        | The proof of the transaction | string 
-destination_address | yes        | the destination public address | string
-
-**Output**
-
-Argument | Description | Format
--------- | ----------- | ------
-signature_valid | whether signature is valid | boolean
-received_amount | the amount received by destination address | int
-outputs  | outputs that belong to destination address | array
-status | status of the request | string
-
-
-### checktransactionbyviewkey
-
-`checktransactionbyviewkey()` method allows to check payment by recipient's `View Secret Key`.
-
-**Input**
-
-Argument          | Mandatory   | Description             | Format
------------------ | ----------- | ----------------------- | ------
-transaction_id    | yes         | the hash of transaction | string
-view_key          | yes         | recipient's `View Secret Key` | string
-address           | yes         | recipient's public address | string
-
-**Output**
-
-Argument | Description | Format
--------- | ----------- | ------
-amount | the amount received by destination address | int
-outputs  | outputs that belong to destination address | array
-confirmations | the number of network confirmations | int
-status | status of the request | string
-
-
-### checkreserveproof
-
-`checkreserveproof()` method allows to check the proof of reserve which proves that given address possess/possessed the said amount at given height. 
-
-**Input**
-
-Argument     | Mandatory   | Description             | Format
------------- | ----------- | ----------------------- | ------
-address      | yes         | public address of wallet which reserve | string
-height       | no          | the height as of which to check the reserve | int
-message      | no          | the challenge message | string
-signature    | yes         | the signature proving the balance | string
-
-**Output**
-
-Argument | Description | Format
--------- | ----------- | ------
-good     | whether signature is valid | boolean
-total    | total amount proved | int
-spent    | spent amount | int
-locked   | locked amount | int
-
-
-### checkpayment
-
-`checkpayment()` allows checking payment to given `address` by given `payment id`. It basically combines the functionality of several separate methods in a single convenience method. This method allows to do the payment in several transactions until the total received amount satisfies the requested one, i.e. it allows payment from several wallets, group payment etc.
-
-**Request**
-
-Argument        | Mandatory     | Description           | Format
---------------- | ------------- | --------------------- | ------
-address         | yes | Receiving public address | string
-amount          | yes | Amount to be paid | int      
-payment_id      | yes | Unique Payment Id of the operation | string
-view_key        | yes | The *Private View Key* of the receiving address | string
-
-**Response**
-
-Argument         | Description          | Format
----------------- | -------------------- | ------
-confirmations    | The number of network confirmations of the paying transaction(s) (largest in case of several transactions) | int
-received_amount  | The amount received in AU | int
-status | Status of payment | string
-transaction_hashes | Hashes of transactions with given Payment ID actually paying to provided address | array 
-
-`status` can be:
-- `paid`, 
-- `underpaid`, 
-- `pending`, 
-- `not_found`
-
-
-### validateaddress
-
-`validateaddress()` methods allows to check if given public address is valid.
-
-**Input**
-
-Argument     | Mandatory   | Description             | Format
------------- | ----------- | ----------------------- | ------
-address      | yes         | public address to validate | string
-
-**Output**
-
-Argument | Description | Format
--------- | ----------- | ------
-is_valid | whether given address is valid | boolean
-address  | address, encoded from decoded public keys | string
-spend_public_key | decoded spend public key of the address | string
-view_public_key | decoded view public key of the address | string
-status | status of the request | string
-
-
-### verifymessage
-
-`verifymessage()` method allows to verify message signed by wallet keys.
-
-**Input**
-
-Argument     | Mandatory   | Description             | Format
------------- | ----------- | ----------------------- | ------
-message      | yes         | message to verify       | string
-address      | yes         | public address corresponding to keys, used to sign message | string
-signature    | yes         | signature of message by private keys | string
-
-**Output**
-
-Argument | Description | Format
--------- | ----------- | ------
-sig_valid | whether signature is valid | boolean
-status | status of the request | string
-
-
-### resolveopenalias
-
-`resolveopenalias()` method allows to get address from alias DNS record. Node perfomrs DNS query and returns address if found.
-
-**Input**
-
-Argument     | Mandatory   | Description             | Format
------------- | ----------- | ----------------------- | ------
-url          | yes         | OpenAlias domain name   | string
-
-**Output**
-
-Argument | Description | Format
--------- | ----------- | ------
-address  | found address correspoding to alias | string
-status | status of the request | string
-
-
-## Examples
-
-### getblockcount
-
-Input:
-```
-{
-	"jsonrpc": "2.0",
-	"id": "test",
-	"method": "getblockcount",
-	"params": {}
-}
-```
-Output: 
-```
- {
- 	"id": "test",
- 	"jsonrpc": "2.0",
- 	"result": {
- 		"count": 123456,
- 		"status": "OK"
- 	}
- }
-```
-
-
-### getblockslist
-
-Input:
-```
-{
-  "jsonrpc": "2.0",
-  "id": "test",
-  "method": "getblockslist",
-  "params": {
-    "height": 100000,
-    "count": 10
-  }
-}
-```
-Output: 
-```
-{
-   "id":"test",
-   "jsonrpc":"2.0",
-   "result":{
-      "blocks":[
-         {
-            "cumulative_size":405,
-            "difficulty":18484080,
-            "hash":"f9940a120ca47d23e014078d7bbfd59f6ce4f20831a4e011b02ff73fcf0372da",
-            "height":100000,
-            "min_fee":100000000000,
-            "timestamp":1492672031,
-            "transactions_count":1
-         },
-
-         ...
-
-         {
-            "cumulative_size":405,
-            "difficulty":24697711,
-            "hash":"8f345a2656da4fd1da0c09193ea177af3ac69ea20f1d5090fbc507cc196ed2d6",
-            "height":99990,
-            "min_fee":100000000000,
-            "timestamp":1492668959,
-            "transactions_count":1
-         }
-      ],
-      "status":"OK"
-   }
-}
-```
-
-
-### getaltblockslist
-
-Input:
-```
-{
-  "jsonrpc": "2.0",
-  "id": "test",
-  "method": "getaltblockslist",
-  "params": {
-  }
-}
-```
-Output:
-```
-{
-   "id":"test",
-   "jsonrpc":"2.0",
-   "result":{
-      "alt_blocks":[
-         {
-            "cumulative_size":405,
-            "difficulty":13913696485,
-            "hash":"2d7cc8c350e1152a9a9178638c09e8c02362c9a19cfe51a3a3722b8a95588afd",
-            "height":490523,
-            "min_fee":100000000000,
-            "timestamp":1590163198,
-            "transactions_count":1
-         }
-      ],
-      "status":"OK"
-   }
-}
-```
-
-
-### getblockhash
-
-Input:
-```
- {
- 	"jsonrpc": "2.0",
- 	"id": "test",
- 	"method": "getblockhash",
- 	"params": {
- 		"height": 123456
- 	}
- }
-```
-Output:
-```
- {
- 	"id": "test",
- 	"jsonrpc": "2.0",
- 	"result": "a7428..."
- }
-```
-
-
-### getblocktemplate
-
-Input:
-```
- {
- 	"jsonrpc": "2.0",
- 	"id" : "test",
- 	"method": "getblocktemplate",
- 	"params": {
- 		"reserve_size": 200,
- 		"wallet_address": "28j5g2Hbe1..."
- 	}
- }
-```
-Output:
-```
- {
- 	"id": "test",
- 	"jsonrpc": "2.0",
- 	"result": {
- 		"blocktemplate_blob": "0100de...",
- 		"difficulty": 65563,
- 		"height": 123456,
- 		"reserved_offset": 395,
- 		"status": ""
- 	}
- }
-```
-
-
-### submitblock
-
-Input: 
-```
- {
- 	"jsonrpc": "2.0",
- 	"id" : "test",
- 	"method": "submitblock",
- 	"params": ["0100b...."]
- }
-```
-Output:
-```
- {
- 	"id": "test",
- 	"jsonrpc": "2.0",
- 	"result": {
- 		"status" : "OK"
- 	}
- }
-```
-
-
-### getlastblockheader
-
-Input:
-```
- {
- 	"jsonrpc": "2.0",
- 	"id" : "test",
- 	"method": "getlastblockheader"
- }
-```
-Output:
-```
- {
- 	"id": "test",
- 	"jsonrpc": "2.0",
- 	"result": {
- 		"block_header": {
- 			"depth": 1,
- 			"difficulty": 65198,
- 			"hash": "9a8be83...",
- 			"height": 123456,
- 			"major_version": 1,
- 			"minor_version": 0,
- 			"nonce": 2358499061,
- 			"orphan_status": false,
- 			"prev_hash": "dde56b7e...",
- 			"reward": 44090506423186,
- 			"timestamp": 1356589561
- 		},
- 		"status": "OK"
- 	}
- }
-```
-
-
-### getblockheaderbyhash
-
-Input:
-```
- {
- 	"jsonrpc": "2.0",
- 	"id" : "test",
- 	"method": "getblockheaderbyhash",
- 	"params": {
- 		"hash" : "9a8be8..."
- 	}
- }
-```
-Output:
-```
- {
- 	"id": "test",
- 	"jsonrpc": "2.0",
- 	"result": {
- 		"block_header": {
- 			"depth": 1,
- 			"difficulty": 65198,
- 			"hash": "9a8be83...",
- 			"height": 123456,
- 			"major_version": 1,
- 			"minor_version": 0,
- 			"nonce": 2358499061,
- 			"orphan_status": false,
- 			"prev_hash": "dde56b7e...",
- 			"reward": 44090506423186,
-  			"timestamp": 1356589561
- 		},
- 		"status": "OK"
- 	}
- }
-```
-
-
-### getblockheaderbyheight
-
-Input:
-```
- {
- 	"jsonrpc": "2.0",
- 	"id" : "test",
- 	"method": "getblockheaderbyheight",
- 	"params": {
- 		"height" : 123456
- 	}
- }
-```
-Output:
-```
- {
- 	"id": "test",
- 	"jsonrpc": "2.0",
- 	"result": {
- 		"block_header": {
- 			"depth": 1,
- 			"difficulty": 65198,
-  			"hash": "9a8be83...",
- 			"height": 123456,
- 			"major_version": 1,
- 			"minor_version": 0,
- 			"nonce": 2358499061,
- 			"orphan_status": false,
- 			"prev_hash": "dde56b7e...",
- 			"reward": 44090506423186,
- 			"timestamp": 1356589561
- 			},
- 		"status": "OK"
- 	}
- }
-```
-
-
-### getblockbyheight
-
-Input:
-```
-{
-  "jsonrpc": "2.0",
-  "method": "getblockbyheight",
-  "id": "test",
-  "params": {
-	"blockHeight": 399666 
-  }
-}
-```
-Output:
-```
-{
-   "id":"test",
-   "jsonrpc":"2.0",
-   "result":{
-      "block":{
-         "alreadyGeneratedCoins":7822291504630269000,
-         "alreadyGeneratedTransactions":842837,
-         "baseReward":8307330332565,
-         "blockSize":23716,
-         "cumulativeDifficulty":2277860049927920,
-         "depth":5,
-         "difficulty":14377384679,
-         "effectiveSizeMedian":1000000,
-         "hash":"4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde",
-         "index":399666,
-         "isOrphaned":false,
-         "majorVersion":4,
-         "minorVersion":0,
-         "nonce":3653353692,
-         "penalty":0,
-         "prevBlockHash":"72199371e92ee3dd95f0993f49a82d3dc7b7175dc004ad9c4437167a7138bd13",
-         "reward":8507330332565,
-         "sizeMedian":532,
-         "timestamp":1568118204,
-         "totalFeeAmount":200000000000,
-         "transactions":[
-            {
-               "blockHash":"4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde",
-               "blockIndex":399666,
-               "extra":{
-                  ...
-               },
-               "fee":0,
-               "hash":"33688742d5e0e84da4cd195d9b6970ce539590b152d6e9095d6837f26defcf74",
-               "inBlockchain":true,
-               "inputs":[
-
-               ],
-               "mixin":0,
-               "outputs":[
-
-               ],
-               "paymentId":"0000000000000000000000000000000000000000000000000000000000000000",
-               "signatures":[
-                  ...
-               ],
-               "signaturesSize":0,
-               "size":500,
-               "timestamp":1568118204,
-               "totalInputsAmount":0,
-               "totalOutputsAmount":8507330332565,
-               "unlockTime":399676
-            },
-            {
-               ...
-            }
-         ],
-         "transactionsCumulativeSize":23640
-      },
-      "status":"OK"
-   }
-}
-```
-
-
-### getblockbyhash
-
-Input:
-```
-{
-  "jsonrpc": "2.0",
-  "method": "getblockbyhash",
-  "id": "test",
-  "params": {
-	"hash": "4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde" 
-  }
-}
-```
-Output:
-```
-{
-   "id":"test",
-   "jsonrpc":"2.0",
-   "result":{
-      "block":{
-         "alreadyGeneratedCoins":7822291504630269000,
-         "alreadyGeneratedTransactions":842837,
-         "baseReward":8307330332565,
-         "blockSize":23716,
-         "cumulativeDifficulty":2277860049927920,
-         "depth":6,
-         "difficulty":14377384679,
-         "effectiveSizeMedian":1000000,
-         "hash":"4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde",
-         "index":399666,
-         "isOrphaned":false,
-         "majorVersion":4,
-         "minorVersion":0,
-         "nonce":3653353692,
-         "penalty":0,
-         "prevBlockHash":"72199371e92ee3dd95f0993f49a82d3dc7b7175dc004ad9c4437167a7138bd13",
-         "reward":8507330332565,
-         "sizeMedian":532,
-         "timestamp":1568118204,
-         "totalFeeAmount":200000000000,
-         "transactions":[
-            {
-               ...
-            },
-            {
-               ...
-            }
-         ],
-         "transactionsCumulativeSize":23640
-      },
-      "status":"OK"
-   }
-}
-```
-
-
-### getblocksbyheights
-
-Input:
-```
-{
-  "jsonrpc": "2.0",
-  "method": "getblocksbyheights",
-  "id": "test",
-  "params": {
-	"blockHeights": [399666, 399667] 
-  }
-}
-```
-Output:
-```
-{
-   "id":"test",
-   "jsonrpc":"2.0",
-   "result":{
-      "blocks":[
-         {
-            "alreadyGeneratedCoins":7822291504630269000,
-            "alreadyGeneratedTransactions":842837,
-            "baseReward":8307330332565,
-            "blockSize":23716,
-            "cumulativeDifficulty":2277860049927920,
-            "depth":6,
-            "difficulty":14377384679,
-            "effectiveSizeMedian":1000000,
-            "hash":"4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde",
-            "index":399666,
-            "isOrphaned":false,
-            "majorVersion":4,
-            "minorVersion":0,
-            "nonce":3653353692,
-            "penalty":0,
-            "prevBlockHash":"72199371e92ee3dd95f0993f49a82d3dc7b7175dc004ad9c4437167a7138bd13",
-            "reward":8507330332565,
-            "sizeMedian":532,
-            "timestamp":1568118204,
-            "totalFeeAmount":200000000000,
-            "transactions":[ ... ],
-            "transactionsCumulativeSize":23640
-         },
-         {
-            ...
-         }
-      ],
-      "status":"OK"
-   }
-}
-```
-
-
-### getblocksbyhashes
-
-Input:
-```
-{
-  "jsonrpc": "2.0",
-  "method": "getblocksbyhashes",
-  "id": "test",
-  "params": {
-	"blockHashes": [
-    	"4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde",
-        "72199371e92ee3dd95f0993f49a82d3dc7b7175dc004ad9c4437167a7138bd13"
-     ] 
-  }
-}
-```
-Output:
-```
-{
-   "id":"test",
-   "jsonrpc":"2.0",
-   "result":{
-      "blocks":[
-         {
-            "alreadyGeneratedCoins":7822291504630269000,
-            "alreadyGeneratedTransactions":842837,
-            "baseReward":8307330332565,
-            "blockSize":23716,
-            "cumulativeDifficulty":2277860049927920,
-            "depth":11,
-            "difficulty":14377384679,
-            "effectiveSizeMedian":1000000,
-            "hash":"4cc94394440e64461766d0e7c675498da934d70a63b143606246f0e6e26d1bde",
-            "index":399666,
-            "isOrphaned":false,
-            "majorVersion":4,
-            "minorVersion":0,
-            "nonce":3653353692,
-            "penalty":0,
-            "prevBlockHash":"72199371e92ee3dd95f0993f49a82d3dc7b7175dc004ad9c4437167a7138bd13",
-            "reward":8507330332565,
-            "sizeMedian":532,
-            "timestamp":1568118204,
-            "totalFeeAmount":200000000000,
-            "transactions":[ ... ],
-            "transactionsCumulativeSize":23640
-         },
-         {
-            ...
-         }
-      ],
-      "status":"OK"
-   }
-}
-```
-
-
-### getblocktimestamp
-
-Input:
-```
-{
-  "jsonrpc": "2.0",
-  "id": "test",
-  "method": "getblocktimestamp",
-  "params": {
-    "height":10000
-  }
-}
-```
-Output:
-```
-{
-   "id":"test",
-   "jsonrpc":"2.0",
-   "result":{
-      "status":"OK",
-      "timestamp":1467193202
-   }
-}
-```
-
-
-### getcurrencyId
-
-Input:
-```
- {
- 	"jsonrpc": "2.0",
- 	"id" : "test",
- 	"method": "getcurrencyid"
- }
-```
-Output:
-```
- {
- 	"id": "test",
- 	"jsonrpc": "2.0",
- 	"result": {
- 		"currency_id_blob": "3125b79e4a42f8d4d2fc4dffea8442e185ebda940ecd4d3b449056a4ea0efea4"
- 	}
- }
-```
-
-
-### gettransaction
 
 Input:
 ```
@@ -1583,6 +1170,32 @@ Output:
 
 ### gettransactionspool
 
+`gettransactionspool()` method returns the list of short details of transactions present in mempool.
+
+No Input
+
+**Output**
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transactions | array of transactions in mempool* | array
+
+\* Empty array means that currently there are no transactions in mempool.
+
+Transactions entry attributes:
+
+Argument | Description | Format
+------- | ---------- | --------
+hash | the hash of transaction | string
+fee | the network fee of transaction | int
+amount_out | total amount in transaction | int
+size | the size of transaction | int
+receive_time | the timestamp when transaction was received by queried node | int
+
+**Example**
+
+
 Input:
 ```
 {
@@ -1638,6 +1251,24 @@ or
 
 
 ### gettransactionsinpool
+
+`gettransactionsinpool()` method returns the list of transactions details that are in mempool. 
+
+No Input
+
+**Output**
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transactions | array of transactions in mempool* | array
+
+\* Empty array means that currently there are no transactions in mempool.
+
+See [gettransaction](#gettransaction) for attributes of `transactions`.
+
+**Example**
+
 
 Input:
 ```
@@ -1746,6 +1377,21 @@ Output:
 
 ### getrawtransactionspool
 
+`getrawtransactionspool()` method returns the list of transactions in mempool consisting of raw transactions with additional details and output indexes. 
+
+No Input
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transactions | array of transactions in mempool* | array
+
+\* Empty array means that currently there are no transactions in mempool.
+
+See [getrawtransactionsbyheights](#getrawtransactionsbyheights) for attributes of `transactions`.
+
+**Example**
+
 Input:
 ```
 {
@@ -1835,6 +1481,32 @@ Output:
 
 ### gettransactionsbypaymentid
 
+`gettransactionsbypaymentid()` methid returns an array of short data of trandactions containing given Payment ID.
+
+**Input**
+
+Argument        | Mandatory     | Description             | Format
+--------------- | ------------- | ----------------------- | ------
+payment_id      | Yes           | Payment ID              | string
+
+**Output**
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transactions | short details of the transactions, see below | array
+
+Short details of the transaction:
+
+Argument | Description | Format
+------- | ---------- | --------
+hash | the hash of transaction | string
+fee | the network fee of transaction | int
+amount_out | total amount in transaction | int
+size | the size of transaction | int
+
+**Example**
+
 Input:
 ```
 {
@@ -1876,6 +1548,24 @@ Output:
 
 
 ### gettransactionhashesbypaymentid
+
+`gettransactionhashesbypaymentid()` method returns hashes of transactions containing given Payment ID.
+
+**Input**
+
+Argument        | Mandatory     | Description             | Format
+--------------- | ------------- | ----------------------- | ------
+paymentId       | Yes           | Payment ID              | string
+
+**Output**
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transactionHashes | hashes of transactions | array
+
+**Example**
+
 Input:
 ```
 {
@@ -1909,6 +1599,26 @@ Output:
 
 
 ### gettransactionsbyhashes
+
+`gettransactionsbyhashes()` method returns details of the transactions found by given hashes.
+
+**Input**
+
+Argument          | Mandatory     | Description             | Format
+----------------- | ------------- | ----------------------- | ------
+transactionHashes | Yes           | hashes of the transactions to find | array
+
+**Output**
+
+Argument | Description | Format
+------- | ---------- | --------
+status | status of the request | string
+transactions | details of the transactions | array
+
+For `transactions` details attributes: see [gettransaction](#gettransaction)
+
+**Example**
+
 Input:
 ```
 {
@@ -2029,6 +1739,30 @@ Output:
 
 
 ### gettransactionsbyheights
+
+`gettransactionsbyheights()` method returns details of the transactions from blocks by requested heights.
+
+**Input**
+
+Argument           | Mandatory     | Description             | Format
+------------------ | ------------- | ----------------------- | ------
+heights            | yes           | heights of blocks from which to serve transactions | array
+include_miner_txs  | no            | whether include coinbase transactions | bool
+exclude_signatures | no            | whether to exclude signatures of transactions | bool
+range              | no            | whether `heights` argument contains a list of blocks or a range (first and last height); if set to `true` transactions from all blocks in a rage are served | bool
+
+**Output**
+
+Argument     | Description | Format
+------------ | ---------- | --------
+status       | status of the request | string
+missed_txs   | list of hashes of missed transactions if any (unlikely to happen) | array
+transactions | details of the transactions | array
+
+For `transactions` details attributes: see [gettransaction](#gettransaction)
+
+**Example**
+
 Input:
 ```
 {
@@ -2133,6 +1867,45 @@ Output:
 
 
 ### getrawtransactionsbyheights
+
+`getrawtransactionsbyheights()` method returns raw transactions with output global indexes from in blocks by requested heights.
+
+**Input**
+
+Argument           | Mandatory     | Description             | Format
+------------------ | ------------- | ----------------------- | ------
+heights            | yes           | heights of blocks from which to serve transactions | array
+include_miner_txs  | no            | whether include coinbase transactions | bool
+range              | no            | whether `heights` argument contains a list of blocks or a range (first and last height); if set to `true` transactions from all blocks in a rage are served | bool
+
+**Output**
+
+Argument     | Description | Format
+------------ | ---------- | --------
+status       | status of the request | string
+missed_txs   | list of hashes of missed transactions if any (unlikely to happen) | array
+transactions | list of raw transaction prefixes and corresponding output global indexes | array
+
+Each entry in `transactions` consists of:
+
+Argument       | Description | Format
+-------------- | ---------- | --------
+block_hash     | the hash of block containing transaction \* | string
+fee            | the network fee of transaction | int
+hash           | the hash of transaction | string
+height         | the height of block containing transaction \*\* | int
+output_indexes | the list of output global indexes | array
+timestamp      | the timestamp of block containing transaction \*\*\* | int
+transaction    | transaction prefix (transaction without signatures) | json object
+
+\* null hash if transaction is not in a block (is in mempool)
+
+\*\* invalid height if transaction is not in a block (is in mempool)
+
+\*\*\* node's receive time if transaction is not in a block (is in mempool)
+
+**Example**
+
 Input:
 ```
 {
@@ -2220,7 +1993,62 @@ Output:
 ```
 
 
+### getcurrencyid
+
+`getcurrencyid()` method returns unique currency identifier.
+
+No Input
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+currency_id_blob | unique currency identifier | string
+
+**Example**
+
+Input:
+```
+ {
+ 	"jsonrpc": "2.0",
+ 	"id" : "test",
+ 	"method": "getcurrencyid"
+ }
+```
+Output:
+```
+ {
+ 	"id": "test",
+ 	"jsonrpc": "2.0",
+ 	"result": {
+ 		"currency_id_blob": "3125b79e4a42f8d4d2fc4dffea8442e185ebda940ecd4d3b449056a4ea0efea4"
+ 	}
+ }
+```
+
+
 ### checktransactionkey
+
+`checktransactionkey()` method allows to check payment by `Private Transaction Key`.
+
+**Input**
+
+Argument          | Mandatory  | Description             | Format
+----------------- | ---------- | ----------------------- | ------
+transaction_id    | yes        | the hash of transaction | string
+transaction_key   | yes        | Private Transaction Key | string 
+address           | yes        | the destination public address | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+amount   | the amount received by destination address | int
+outputs  | outputs that belong to destination address | array
+status   | status of the request | string
+
+**Example**
+
 Input:
 ```
 {
@@ -2259,6 +2087,28 @@ Output:
 
 
 ### checktransactionproof
+
+`checktransactionproof()` allows to check payment by special Transaction Proof without revealing `Private Transaction Key` by sender.
+
+**Input**
+
+Argument            | Mandatory  | Description             | Format
+------------------- | ---------- | ----------------------- | ------
+transaction_id      | yes        | the hash of transaction | string
+signature           | yes        | The proof of the transaction | string 
+destination_address | yes        | the destination public address | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+signature_valid | whether signature is valid | boolean
+received_amount | the amount received by destination address | int
+outputs  | outputs that belong to destination address | array
+status | status of the request | string
+
+**Example**
+
 Input:
 ```
 {
@@ -2308,6 +2158,28 @@ Output:
 
 
 ### checktransactionbyviewkey
+
+`checktransactionbyviewkey()` method allows to check payment by recipient's `View Secret Key`.
+
+**Input**
+
+Argument          | Mandatory   | Description             | Format
+----------------- | ----------- | ----------------------- | ------
+transaction_id    | yes         | the hash of transaction | string
+view_key          | yes         | recipient's `View Secret Key` | string
+address           | yes         | recipient's public address | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+amount | the amount received by destination address | int
+outputs  | outputs that belong to destination address | array
+confirmations | the number of network confirmations | int
+status | status of the request | string
+
+**Example**
+
 Input:
 ```
 {
@@ -2359,6 +2231,29 @@ Output:
 
 
 ### checkreserveproof
+
+`checkreserveproof()` method allows to check the proof of reserve which proves that given address possess/possessed the said amount at given height. 
+
+**Input**
+
+Argument     | Mandatory   | Description             | Format
+------------ | ----------- | ----------------------- | ------
+address      | yes         | public address of wallet which reserve | string
+height       | no          | the height as of which to check the reserve | int
+message      | no          | the challenge message | string
+signature    | yes         | the signature proving the balance | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+good     | whether signature is valid | boolean
+total    | total amount proved | int
+spent    | spent amount | int
+locked   | locked amount | int
+
+**Example**
+
 Input:
 ```
 {
@@ -2389,6 +2284,35 @@ Output:
 
 
 ### checkpayment
+
+`checkpayment()` allows checking payment to given `address` by given `payment id`. It basically combines the functionality of several separate methods in a single convenience method. This method allows to do the payment in several transactions until the total received amount satisfies the requested one, i.e. it allows payment from several wallets, group payment etc.
+
+**Request**
+
+Argument        | Mandatory     | Description           | Format
+--------------- | ------------- | --------------------- | ------
+address         | yes | Receiving public address | string
+amount          | yes | Amount to be paid | int      
+payment_id      | yes | Unique Payment Id of the operation | string
+view_key        | yes | The *Private View Key* of the receiving address | string
+
+**Response**
+
+Argument         | Description          | Format
+---------------- | -------------------- | ------
+confirmations    | The number of network confirmations of the paying transaction(s) (largest in case of several transactions) | int
+received_amount  | The amount received in AU | int
+status | Status of payment | string
+transaction_hashes | Hashes of transactions with given Payment ID actually paying to provided address | array 
+
+`status` can be:
+- `paid`, 
+- `underpaid`, 
+- `pending`, 
+- `not_found`
+
+**Example**
+
 Input:
 ```
 {
@@ -2419,6 +2343,27 @@ Output:
 
 
 ### validateaddress
+
+`validateaddress()` methods allows to check if given public address is valid.
+
+**Input**
+
+Argument     | Mandatory   | Description             | Format
+------------ | ----------- | ----------------------- | ------
+address      | yes         | public address to validate | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+is_valid | whether given address is valid | boolean
+address  | address, encoded from decoded public keys | string
+spend_public_key | decoded spend public key of the address | string
+view_public_key | decoded view public key of the address | string
+status | status of the request | string
+
+**Example**
+
 Input:
 ```
 {
@@ -2447,6 +2392,26 @@ Output:
 
 
 ### verifymessage
+
+`verifymessage()` method allows to verify message signed by wallet keys.
+
+**Input**
+
+Argument     | Mandatory   | Description             | Format
+------------ | ----------- | ----------------------- | ------
+message      | yes         | message to verify       | string
+address      | yes         | public address corresponding to keys, used to sign message | string
+signature    | yes         | signature of message by private keys | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+sig_valid | whether signature is valid | boolean
+status | status of the request | string
+
+**Example**
+
 Input:
 ```
 {
@@ -2472,7 +2437,26 @@ Output:
 }
 ```
 
+
 ### resolveopenalias
+
+`resolveopenalias()` method allows to get address from alias DNS record. Node perfomrs DNS query and returns address if found.
+
+**Input**
+
+Argument     | Mandatory   | Description             | Format
+------------ | ----------- | ----------------------- | ------
+url          | yes         | OpenAlias domain name   | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+address  | found address correspoding to alias | string
+status | status of the request | string
+
+**Example**
+
 Input:
 ```
 {
@@ -2493,5 +2477,93 @@ Output:
     "address": "KetKFqZu4jH9Gnbbvp5ckbXBzadeDK6EFPNFuPcZcCjMDK31r84weVzcF2BhewZEQGZUjDTB7QgHVbJoYTE89eh2ETuDdLH",
     "status": "OK"
   }
+}
+```
+
+
+### getaccountnumber
+
+`getaccountnumber()` method allows to get account number for address.
+
+**Input**
+
+Argument | Description | Format
+-------- | ----------- | ------
+address  | wallet address | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+account_number  | found account number correspoding to address | string
+status | status of the request | string
+
+**Example**
+
+Input:
+
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "getaccountnumber",
+  "params": {
+   "address":"KeGq4pHHmHa9HBUvLmiFXSXok7Bp3hHa37m5nv1ashoxgWyPEDfZ7tRSyuJZZSxvqEDZTM8mBrqkzjBQQKYQcs51UvJM6Yr"
+  }
+}
+```
+
+Output:
+```
+{
+    "id": "test",
+    "jsonrpc": "2.0",
+    "result": {
+        "account_number": "1256970-1-P",
+        "status": "OK"
+    }
+}
+```
+
+### resolveaccountnumber
+
+`resolveaccountnumber()` method allows to get address for account number.
+
+**Input**
+
+Argument | Description | Format
+-------- | ----------- | ------
+account_number  | in format H-I-C | string
+
+**Output**
+
+Argument | Description | Format
+-------- | ----------- | ------
+address  | found address correspoding to provided account number | string
+status | status of the request | string
+
+**Example**
+
+Input:
+```
+{
+  "jsonrpc": "2.0",
+  "id": "test",
+  "method": "resolveaccountnumber",
+  "params": {
+   "account_number":"1256970-1-P"
+  }
+}
+```
+
+Output:
+```
+{
+    "id": "test",
+    "jsonrpc": "2.0",
+    "result": {
+        "address": "KeGq4pHHmHa9HBUvLmiFXSXok7Bp3hHa37m5nv1ashoxgWyPEDfZ7tRSyuJZZSxvqEDZTM8mBrqkzjBQQKYQcs51UvJM6Yr",
+        "status": "OK"
+    }
 }
 ```
