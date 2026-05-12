@@ -23,6 +23,7 @@
 
 * [Integration Guide](integration.md)
 * [Karbo RPC Wallet](karbo-walletd.md)
+* [Deep Reorg Protection for Public Infrastructure](deep-reorg-protection.md)
 
 
 ## API Documentation
@@ -33,12 +34,11 @@
 * [Multisignature API](multisignature-api.md)
 
 ## Articles and Papers
-* [Karbo Whitepaper v. 1.0](https://github.com/Karbovanets/papers/blob/master/whitepaper.pdf)
+* [Karbo Account Numbers Overview](account-numbers.md)
+* [Karbo Account Numbers In-Depth Paper](https://github.com/Karbovanets/papers/blob/master/Karbo_Account_Numbers.pdf)
+* DEPRECATED! [Karbo Whitepaper v. 1.0](https://github.com/Karbovanets/papers/blob/master/whitepaper.pdf)
 * [CryptoNote Whitepaper v 2.0](https://github.com/Karbovanets/papers/blob/master/cryptonote_whitepaper.pdf)
 * [Various KIPs (Karbo Imprmovement Proposals) and articles](https://github.com/Karbovanets/papers)
-* [Karbo Account Numbers Overview](account-numbers.md)
-* [Karbo Account Numbers In-Depth Paper](Karbo_Account_Numbers.pdf)
-
 \
 \
 \
